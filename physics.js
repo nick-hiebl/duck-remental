@@ -8,3 +8,15 @@ const overlaps = (r1, r2) => {
 const getGroundingRect = rect => {
     return { x: rect.x, width: rect.width, y: rect.y + rect.height, height: 1 };
 };
+
+const approach = (current, target, step) => {
+    if (current > target) {
+        return Math.max(current - step, target);
+    } else {
+        return Math.min(current + step, target);
+    }
+};
+
+const dist = (p1, p2) => {
+    return Math.hypot(p1.x - p2.x, p1.y - p2.y);
+};

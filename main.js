@@ -1,44 +1,23 @@
-const PLAYER_SPEED = 300;
-const Y_ACCEL = 0.8;
+const ITEM_RADIUS = 4;
 
 const Game = () => {
-    const player = new Actor(100, 100, 30, 40);
-    player.yVel = 0;
+    const creatures = [new Creature(400, 300)];
 
-    const solids = [{ x: 20, y: 500, width: 640, height: 2 }];
+    const items = [{ x: 100, y: 100 }, { x: 550, y: 200 }];
 
     const draw = (ctx) => {
         ctx.fillStyle = 'white';
         ctx.fillRect(0, 0, 800, 600);
 
-        ctx.fillStyle = '#0f0';
-
-        ctx.beginPath();
-        ctx.ellipse(player.x + player.width / 2, player.y + player.height / 2, player.width / 2, player.height / 2, 0, 0, Math.PI * 2);
-        ctx.fill();
+        creatures.forEach(creature => creature.draw(ctx));
 
         ctx.fillStyle = 'black';
 
-        solids.forEach(solid => ctx.fillRect(solid.x, solid.y, solid.width, solid.height));
+        items.forEach(item => ctx.fillRect(item.x - ITEM_RADIUS, item.y - ITEM_RADIUS, ITEM_RADIUS * 2, ITEM_RADIUS * 2));
     };
 
     const update = (deltaTime, keys) => {
-        const xMove = (keys['a'] ? -1 : 0) + (keys['d'] ? 1 : 0);
-
-        if (xMove !== 0) {
-            player.moveX(xMove * PLAYER_SPEED * deltaTime, solids);
-        }
-
-        const grounding = getGroundingRect(player);
-
-        if (solids.some(solid => overlaps(grounding, solid))) {
-            player.yVel = 0;
-        } else {
-            const prevY = player.y;
-            player.yVel += Y_ACCEL * deltaTime;
-            player.moveY(player.yVel, solids);
-            console.log(player.yVel, player.y, player.y - prevY);
-        }
+        creatures.forEach(creature => creature.update(deltaTime, items));
     };
 
     return {
