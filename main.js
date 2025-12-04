@@ -1,23 +1,33 @@
 const ITEM_RADIUS = 4;
 
 const Game = () => {
-    const creatures = [new Creature(400, 300)];
+    const creatures = [new Creature(100, 300), new Creature(200, 300), new Creature(300, 300), new Creature(400, 300)];
 
-    const items = [{ x: 100, y: 100 }, { x: 550, y: 200 }];
+    let items = [new Pellet(100, 100), new Pellet(550, 200)];
+    let foodTimer = 0;
+    let foodRate = 0.2;
+    let maxFood = 50;
 
     const draw = (ctx) => {
-        ctx.fillStyle = 'white';
+        ctx.fillStyle = '#59f';
         ctx.fillRect(0, 0, 800, 600);
 
+        items.forEach(item => item.draw(ctx));
+
         creatures.forEach(creature => creature.draw(ctx));
-
-        ctx.fillStyle = 'black';
-
-        items.forEach(item => ctx.fillRect(item.x - ITEM_RADIUS, item.y - ITEM_RADIUS, ITEM_RADIUS * 2, ITEM_RADIUS * 2));
     };
 
     const update = (deltaTime, keys) => {
         creatures.forEach(creature => creature.update(deltaTime, items));
+
+        items = items.filter(item => !item.eaten);
+
+        foodTimer += deltaTime;
+
+        if (foodTimer >= foodRate && items.length < maxFood) {
+            items.push(new Pellet(Math.random() * 800, Math.random() * 600));
+            foodTimer = 0;
+        }
     };
 
     return {
