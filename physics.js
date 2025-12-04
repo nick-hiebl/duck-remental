@@ -20,3 +20,46 @@ const approach = (current, target, step) => {
 const dist = (p1, p2) => {
     return Math.hypot(p1.x - p2.x, p1.y - p2.y);
 };
+
+const v_add = (...args) => {
+    const sum = { x: 0, y: 0 };
+
+    for (const v of args) {
+        sum.x += v.x;
+        sum.y += v.y;
+    }
+
+    return sum;
+};
+
+const v_sub = (a, b) => {
+    return { x: a.x - b.x, y: a.y - b.y };
+};
+
+const v_scale = (v, t) => {
+    return { x: v.x * t, y: v.y * t };
+};
+
+const v_mag = v => Math.hypot(v.x, v.y);
+
+const v_set_magnitude = (v, magnitude) => {
+    const current = v_mag(v);
+
+    if (current === 0) return v_add(v);
+
+    return v_scale(v, magnitude / current);
+};
+
+const v_cap_magnitude = (v, max_magnitude) => {
+    const current = v_mag(v);
+
+    if (current <= max_magnitude) {
+        return v;
+    }
+
+    return v_scale(v, max_magnitude / current);
+};
+
+const dot_product = (a, b) => {
+    return a.x * b.x + a.y * b.y;
+};

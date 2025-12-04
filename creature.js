@@ -1,17 +1,21 @@
 const RADIUS = 10;
 
-const IDLE_DECEL = 0.1;
-const STOP_DECEL = 1;
+const DECEL_RATE = 360;
+const IDLE_DECEL = 1 / 12;
+const STOP_DECEL = 1.0;
+const ORBIT_DECEL = 5 / 12;
 const ACCEL_RATE = 120;
 
 const SPEED = 100;
 
-const EAT_DIST = 40;
+const EAT_DIST = 20;
 
 const MAX_EATING_SPEED = 0.1;
 
 class Creature {
     constructor(x, y) {
+        this.id = Math.random().toString().slice(2);
+
         this.x = x;
         this.y = y;
 
@@ -21,17 +25,55 @@ class Creature {
         this.score = 0;
 
         this.target = null;
+
+        this.config = new CreatureConfig();
+    }
+
+    get pos() {
+        return { x: this.x, y: this.y };
+    }
+
+    set pos(v) {
+        this.x = v.x;
+        this.y = v.y;
+    }
+
+    get vel() {
+        return { x: this.vx, y: this.vy };
+    }
+
+    set vel(v) {
+        this.vx = v.x;
+        this.vy = v.y;
     }
 
     draw(ctx) {
+        ctx.strokeStyle = '#ff0';
+        ctx.beginPath();
+        ctx.ellipse(this.x, this.y, this.config.eatDist, this.config.eatDist, 0, 0, 2 * Math.PI);
+        ctx.stroke();
+
+        if (this.target) {
+            ctx.strokeStyle = '#ff0';
+            ctx.beginPath();
+            ctx.ellipse(this.target.x, this.target.y, 8, 8, 0, 0, 2 * Math.PI);
+            ctx.stroke();
+
+            ctx.moveTo(this.x, this.y);
+            ctx.lineTo(this.target.x, this.target.y);
+            ctx.stroke();
+        }
+
+
         ctx.fillStyle = '#0f0';
         ctx.beginPath();
-        ctx.ellipse(this.x, this.y, RADIUS, RADIUS, 0, 0, 2 * Math.PI);
+        ctx.ellipse(this.x, this.y, this.config.size, this.config.size, 0, 0, 2 * Math.PI);
         ctx.fill();
     }
 
     strategy(items) {
         if (items.length === 0) {
+            this.target = null;
             return { id: 'STOP', rate: IDLE_DECEL };
         }
 
@@ -63,8 +105,8 @@ class Creature {
             }, [index, items[0]]);
         }
 
-        if (dist(this, closestItem) < EAT_DIST) {
-            if (Math.hypot(this.vx, this.vy) <= MAX_EATING_SPEED) {
+        if (dist(this, closestItem) < this.config.eatDist) {
+            if (v_mag(this.vel) <= this.config.maxEatingSpeed) {
                 return { id: 'EAT', target: closestItem };
             }
 
@@ -80,23 +122,42 @@ class Creature {
         if (strategy.id === 'EAT') {
             this.score += strategy.target.eat();
         } else if (strategy.id === 'STOP') {
-            this.vx = approach(this.vx, 0, strategy.rate);
-            this.vy = approach(this.vy, 0, strategy.rate);
+            this.vel = v_set_magnitude(
+                this.vel,
+                Math.max(v_mag(this.vel) - this.config.decelRate * strategy.rate * deltaTime, 0),
+            );
         } else if (strategy.id === 'APPROACH') {
             this.target = strategy.target;
             const target = strategy.target;
 
             const offset = { x: target.x - this.x, y: target.y - this.y };
 
-            const distance = dist(target, this);
+            this.vel = v_cap_magnitude(
+                v_add(this.vel, v_cap_magnitude(offset, this.config.accelRate * deltaTime)),
+                this.config.speed,
+            );
 
-            const targetSpeed = { x: offset.x * SPEED / distance, y: offset.y * SPEED / distance };
-
-            this.vx = approach(this.vx, targetSpeed.x, ACCEL_RATE * deltaTime * Math.abs(offset.x / distance));
-            this.vy = approach(this.vy, targetSpeed.y, ACCEL_RATE * deltaTime * Math.abs(offset.y / distance));
+            // Kill orbital behaviour by decelerating the creature if it is going in the wrong direction
+            if (dot_product(this.vel, offset) < 0) {
+                this.vel = v_set_magnitude(
+                    this.vel,
+                    Math.max(v_mag(this.vel) - this.config.decelRate * ORBIT_DECEL, 0),
+                );
+            }
         }
 
-        this.x += this.vx * deltaTime;
-        this.y += this.vy * deltaTime;
+        this.pos = v_add(this.pos, v_scale(this.vel, deltaTime));
+    }
+}
+
+class CreatureConfig {
+    constructor() {
+        this.eatDist = EAT_DIST;
+        this.size = RADIUS;
+
+        this.decelRate = 360;
+        this.maxEatingSpeed = MAX_EATING_SPEED;
+        this.accelRate = ACCEL_RATE;
+        this.speed = SPEED;
     }
 }

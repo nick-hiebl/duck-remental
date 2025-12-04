@@ -1,7 +1,12 @@
 const ITEM_RADIUS = 4;
 
 const Game = () => {
-    const creatures = [new Creature(100, 300), new Creature(200, 300), new Creature(300, 300), new Creature(400, 300)];
+    const creatures = [
+        new Creature(100, 300),
+        new Creature(200, 300),
+        new Creature(300, 300),
+        new Creature(400, 300),
+    ];
 
     let items = [new Pellet(100, 100), new Pellet(550, 200)];
     let foodTimer = 0;
@@ -43,6 +48,7 @@ const main = () => {
     const ctx = canvas.getContext('2d');
 
     const game = Game();
+    window.game = game;
 
     let lastFrameTime = performance.now();
 
