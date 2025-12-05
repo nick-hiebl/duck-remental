@@ -1,5 +1,3 @@
-const ITEM_RADIUS = 4;
-
 const Game = () => {
     const creatures = [
         new Creature(100, 300),
@@ -7,8 +5,13 @@ const Game = () => {
         new Creature(300, 300),
         new Creature(400, 300),
     ];
+    window.creatures = creatures;
+
+    let budget = 0;
 
     let items = [new Pellet(100, 100), new Pellet(550, 200)];
+    window.items = items;
+
     let foodTimer = 0;
     let foodRate = 0.2;
     let maxFood = 50;
@@ -22,10 +25,15 @@ const Game = () => {
         creatures.forEach(creature => creature.draw(ctx));
     };
 
-    const update = (deltaTime, keys) => {
-        creatures.forEach(creature => creature.update(deltaTime, items));
+    const update = deltaTime => {
+        creatures.forEach(creature => {
+            creature.update(deltaTime, items);
+            budget += creature.score;
+            creature.score = 0;
+        });
 
         items = items.filter(item => !item.eaten);
+        window.items = items;
 
         foodTimer += deltaTime;
 
@@ -52,21 +60,12 @@ const main = () => {
 
     let lastFrameTime = performance.now();
 
-    const keys = {};
-
-    document.addEventListener('keydown', event => {
-        keys[event.key] = true;
-    });
-    document.addEventListener('keyup', event => {
-        delete keys[event.key];
-    });
-
     const loop = () => {
         const thisFrameTime = performance.now();
         const elapsedTime = Math.min(MAX_FRAME_DUR, thisFrameTime - lastFrameTime);
         lastFrameTime = thisFrameTime;
 
-        game.update(elapsedTime / 1000, keys);
+        game.update(elapsedTime / 1000);
         game.draw(ctx);
 
         requestAnimationFrame(loop);
