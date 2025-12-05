@@ -312,7 +312,7 @@ const UPGRADES = [
             upgrade: config => {
                 config.speed = 130;
                 config.accelRate = 150;
-                config.decelRate = 420;
+                config.decelRate = 480;
             },
         },
         {
@@ -321,7 +321,7 @@ const UPGRADES = [
             upgrade: config => {
                 config.speed = 170;
                 config.accelRate = 190;
-                config.decelRate = 480;
+                config.decelRate = 600;
             },
         },
         {
@@ -330,7 +330,7 @@ const UPGRADES = [
             upgrade: config => {
                 config.speed = 250;
                 config.accelRate = 280;
-                config.decelRate = 520;
+                config.decelRate = 720;
             },
         },
         {
@@ -339,7 +339,7 @@ const UPGRADES = [
             upgrade: config => {
                 config.speed = 400;
                 config.accelRate = 400;
-                config.decelRate = 600;
+                config.decelRate = 900;
             },
         },
         {
@@ -348,7 +348,7 @@ const UPGRADES = [
             upgrade: config => {
                 config.speed = 550;
                 config.accelRate = 800;
-                config.decelRate = 720;
+                config.decelRate = 1200;
             },
         },
     ],

@@ -1,6 +1,9 @@
 const Game = () => {
     const gameState = {
         unspentPoints: 0,
+        newFoodValue: 1,
+        foodRate: 0.2,
+        maxFood: 50,
     };
 
     const creatures = [
@@ -11,18 +14,26 @@ const Game = () => {
 
     const main = document.getElementById('info');
 
-    let items = [new Pellet(100, 100), new Pellet(550, 200)];
+    const gameControlBox = document.getElementById('game-controls');
+
+    const gameUpgrades = GAME_UPGRADES.map(list => {
+        return new Upgrade(list, { gameState });
+    });
+    gameUpgrades.forEach(upgrade => {
+        gameControlBox.appendChild(upgrade.button);
+    });
+
+    let items = [];
     window.items = items;
 
     let foodTimer = 0;
-    let foodRate = 0.2;
-    let maxFood = 50;
 
     const draw = (ctx) => {
         ctx.fillStyle = '#59f';
         ctx.fillRect(0, 0, 800, 600);
 
         items.forEach(item => item.draw(ctx));
+        gameUpgrades.forEach(upgrade => upgrade.draw());
 
         creatures.forEach(creature => creature.draw(ctx));
 
@@ -41,8 +52,8 @@ const Game = () => {
 
         foodTimer += deltaTime;
 
-        if (foodTimer >= foodRate && items.length < maxFood) {
-            items.push(new Pellet(Math.random() * 800, Math.random() * 600));
+        if (foodTimer >= gameState.foodRate && items.length < gameState.maxFood) {
+            items.push(new Pellet(Math.random() * 800, Math.random() * 600, gameState));
             foodTimer = 0;
         }
     };
@@ -81,3 +92,75 @@ const main = () => {
 window.onload = () => {
     main();
 };
+
+const GAME_UPGRADES = [
+    [
+        {
+            text: 'Double food',
+            cost: 10,
+            upgrade: config => {
+                config.gameState.newFoodValue = 2;
+            },
+        },
+        {
+            text: 'Triple food',
+            cost: 100,
+            upgrade: config => {
+                config.gameState.newFoodValue = 3;
+            },
+        },
+        {
+            text: 'Quadruple food',
+            cost: 500,
+            upgrade: config => {
+                config.gameState.newFoodValue = 4;
+            },
+        },
+    ],
+    [
+        {
+            text: 'Faster food',
+            cost: 20,
+            upgrade: config => {
+                config.gameState.foodRate = 0.15;
+            },
+        },
+        {
+            text: 'Even faster food',
+            cost: 500,
+            upgrade: config => {
+                config.gameState.foodRate = 0.1;
+            },
+        },
+        {
+            text: 'Better food rate',
+            cost: 2000,
+            upgrade: config => {
+                config.gameState.foodRate = 0.05;
+            },
+        },
+    ],
+    [
+        {
+            text: 'More food capacity',
+            cost: 10,
+            upgrade: config => {
+                config.gameState.maxFood = 70;
+            },
+        },
+        {
+            text: 'Even more food',
+            cost: 500,
+            upgrade: config => {
+                config.gameState.maxFood = 100;
+            },
+        },
+        {
+            text: 'Lots of space for food',
+            cost: 2000,
+            upgrade: config => {
+                config.gameState.maxFood = 150;
+            },
+        },
+    ],
+];
