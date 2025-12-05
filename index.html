@@ -1,23 +1,14 @@
 <html>
     <head>
-        <title>Generic platformer</title>
-        <style>
-            body {
-                background-color: #333;
-            }
-            canvas {
-                border: 1px solid black;
-            }
-            .creature-control-box {
-                background-color: #eee;
-                border: 1px solid black;
-                margin: 8px;
-                padding: 4px;
-            }
-        </style>
+        <title>Duck-remental</title>
+
+        <link rel="stylesheet" href="./style.css">
     </head>
     <body>
         <canvas id="canvas" width="800" height="600"></canvas>
+        <div id="info" class="info-box">
+            Crumbs collected: <span id="crumbs">0</span>
+        </div>
         <div id="controls"></div>
         
         <script src="./dom.js"></script>

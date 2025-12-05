@@ -13,7 +13,7 @@ const EAT_DIST = 20;
 const MAX_EATING_SPEED = 0.1;
 
 class Creature {
-    constructor(x, y) {
+    constructor(x, y, gameState) {
         this.id = Math.random().toString().slice(2);
 
         this.x = x;
@@ -29,7 +29,7 @@ class Creature {
 
         this.hovered = false;
 
-        this.config = new CreatureConfig(this);
+        this.config = new CreatureConfig(this, gameState);
     }
 
     get pos() {
@@ -88,6 +88,8 @@ class Creature {
         ctx.moveTo(this.x, this.y);
         ctx.ellipse(this.x, this.y, this.config.size * 0.8, this.config.size * 0.8, 0, 0, 2 * Math.PI * Math.min(1, this.timeSinceEating / this.config.eatingCooldown));
         ctx.fill();
+
+        this.config.draw();
     }
 
     isEatingOnCooldown() {
@@ -114,9 +116,6 @@ class Creature {
                     item,
                 };
             });
-
-            const total = weights.reduce((total, { weight }) => total + weight, 0);
-            const index = Math.random() * total;
 
             const BEST_TO_CHOOSE = 3;
 
@@ -192,8 +191,9 @@ class Creature {
 }
 
 class CreatureConfig {
-    constructor(parent) {
+    constructor(parent, gameState) {
         this.parent = parent;
+        this.gameState = gameState;
 
         this.eatDist = EAT_DIST;
         this.size = RADIUS;
@@ -207,51 +207,20 @@ class CreatureConfig {
 
         const box = document.getElementById('controls');
 
+        const upgradeBox = createElement('div');
+        this.upgrades = UPGRADES.map(list => {
+            return new Upgrade(list, this);
+        });
+
+        this.upgrades.forEach(upgrade => {
+            upgradeBox.appendChild(upgrade.button);
+        });
+
         const myDiv = createElement('div', {
             classList: ['creature-control-box'],
             children: [
                 createTextNode(parent.id),
-                createElement('button', {
-                    text: 'More speed!',
-                    eventHandlers: {
-                        click: () => {
-                            this.speed += 20;
-                        },
-                    },
-                }),
-                createElement('button', {
-                    text: 'More accel!',
-                    eventHandlers: {
-                        click: () => {
-                            this.accelRate += 20;
-                            this.decelRate += 50;
-                        },
-                    },
-                }),
-                createElement('button', {
-                    text: 'More eat radius!',
-                    eventHandlers: {
-                        click: () => {
-                            this.eatDist += 20;
-                        },
-                    },
-                }),
-                createElement('button', {
-                    text: 'Eat while moving faster!',
-                    eventHandlers: {
-                        click: () => {
-                            this.maxEatingSpeed += 10;
-                        },
-                    },
-                }),
-                createElement('button', {
-                    text: 'Eat more frequently!',
-                    eventHandlers: {
-                        click: () => {
-                            this.eatingCooldown *= 0.75;
-                        },
-                    },
-                }),
+                upgradeBox,
             ],
         });
 
@@ -264,4 +233,137 @@ class CreatureConfig {
 
         box.appendChild(myDiv);
     }
+
+    draw() {
+        this.upgrades.forEach(upgrade => upgrade.draw());
+    }
 }
+
+class Upgrade {
+    constructor(levels, config) {
+        this.config = config;
+        this.levels = levels;
+
+        this.progress = 0;
+
+        const name = createElement('span', { text: levels[0].text });
+        const levelSpan = createElement('span', { text: '1' });
+
+        const div1 = createElement('div', {
+            children: [
+                name,
+                createTextNode(' (level '),
+                levelSpan,
+                createTextNode(')'),
+            ],
+        });
+
+        const priceSpan = createElement('span', { text: levels[0].cost });
+
+        const div2 = createElement('div', {
+            children: [
+                createTextNode('Cost: '),
+                priceSpan,
+            ],
+        });
+
+        this.button = createElement('button', {
+            children: [div1, div2],
+            eventHandlers: {
+                click: () => {
+                    const relevantStage = this.levels[this.progress];
+
+                    if (!relevantStage) {
+                        return;
+                    }
+
+                    if (this.config.gameState.unspentPoints >= relevantStage.cost) {
+                        this.config.gameState.unspentPoints -= relevantStage.cost;
+                        this.progress += 1;
+                        relevantStage.upgrade(this.config);
+
+                        if (this.levels[this.progress]) {
+                            name.textContent = this.levels[this.progress].text;
+                            levelSpan.textContent = this.progress;
+                            priceSpan.textContent = this.levels[this.progress].cost;
+                        } else {
+                            levelSpan.textContent = 'MAX';
+                        }
+                    }
+                },
+            },
+        });
+    }
+
+    draw() {
+        if (this.progress >= this.levels.length || this.config.gameState.unspentPoints < this.levels[this.progress].cost) {
+            this.button.disabled = true;
+        } else {
+            this.button.disabled = false;
+        }
+    }
+}
+
+const UPGRADES = [
+    [
+        {
+            text: 'Faster',
+            cost: 1,
+            upgrade: config => {
+                config.speed = 130;
+                config.accelRate = 150;
+                config.decelRate = 420;
+            },
+        },
+        {
+            text: 'More fast',
+            cost: 10,
+            upgrade: config => {
+                config.speed = 170;
+                config.accelRate = 190;
+                config.decelRate = 480;
+            },
+        },
+        {
+            text: 'Even faster',
+            cost: 50,
+            upgrade: config => {
+                config.speed = 250;
+                config.accelRate = 280;
+                config.decelRate = 520;
+            },
+        },
+        {
+            text: 'Turbo speed',
+            cost: 250,
+            upgrade: config => {
+                config.speed = 400;
+                config.accelRate = 400;
+                config.decelRate = 600;
+            },
+        },
+        {
+            text: 'Lightning speed',
+            cost: 1000,
+            upgrade: config => {
+                config.speed = 550;
+                config.accelRate = 800;
+                config.decelRate = 720;
+            },
+        },
+    ],
+    [
+        { text: 'Hungry', cost: 1, upgrade: config => { config.eatingCooldown = 1.6 } },
+        { text: 'Fast eater', cost: 10, upgrade: config => { config.eatingCooldown = 1.3 } },
+        { text: 'Record eater', cost: 50, upgrade: config => { config.eatingCooldown = 1.0 } },
+        { text: 'Monster stomach', cost: 250, upgrade: config => { config.eatingCooldown = 0.75 } },
+        { text: 'Demonic hunger', cost: 1000, upgrade: config => { config.eatingCooldown = 0.4 } },
+    ],
+    [
+        { text: 'Eating radius', cost: 1, upgrade: config => { config.eatDist = 24 } },
+        { text: 'Long reach', cost: 10, upgrade: config => { config.eatDist = 30 } },
+        { text: 'Eat further', cost: 50, upgrade: config => { config.eatDist = 36 } },
+        { text: 'Longer neck', cost: 250, upgrade: config => { config.eatDist = 48 } },
+        { text: 'Wide chomping berth', cost: 1000, upgrade: config => { config.eatDist = 56 } },
+    ],
+];

@@ -1,13 +1,15 @@
 const Game = () => {
+    const gameState = {
+        unspentPoints: 0,
+    };
+
     const creatures = [
-        new Creature(100, 300),
-        new Creature(200, 300),
-        new Creature(300, 300),
-        new Creature(400, 300),
+        new Creature(100, 300, gameState),
     ];
     window.creatures = creatures;
+    window.gameState = gameState;
 
-    let budget = 0;
+    const main = document.getElementById('info');
 
     let items = [new Pellet(100, 100), new Pellet(550, 200)];
     window.items = items;
@@ -23,12 +25,14 @@ const Game = () => {
         items.forEach(item => item.draw(ctx));
 
         creatures.forEach(creature => creature.draw(ctx));
+
+        document.getElementById('crumbs').textContent = gameState.unspentPoints;
     };
 
     const update = deltaTime => {
         creatures.forEach(creature => {
             creature.update(deltaTime, items);
-            budget += creature.score;
+            gameState.unspentPoints += creature.score;
             creature.score = 0;
         });
 
