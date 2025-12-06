@@ -51,26 +51,7 @@ class Creature {
     }
 
     draw(ctx) {
-        ctx.lineWidth = 1;
-        ctx.strokeStyle = '#ff0';
-        ctx.beginPath();
-        ctx.ellipse(this.x, this.y, this.config.eatDist, this.config.eatDist, 0, 0, 2 * Math.PI);
-        ctx.stroke();
-
-        if (this.target) {
-            ctx.lineWidth = 1;
-            ctx.strokeStyle = '#ff0';
-            ctx.beginPath();
-            ctx.ellipse(this.target.x, this.target.y, 8, 8, 0, 0, 2 * Math.PI);
-            ctx.stroke();
-
-            ctx.moveTo(this.x, this.y);
-            ctx.lineTo(this.target.x, this.target.y);
-            ctx.stroke();
-        }
-
-
-        ctx.fillStyle = '#0f0';
+        ctx.fillStyle = 'yellow';
         ctx.beginPath();
         ctx.ellipse(this.x, this.y, this.config.size, this.config.size, 0, 0, 2 * Math.PI);
         ctx.fill();
@@ -79,14 +60,14 @@ class Creature {
             ctx.lineWidth = 2;
             ctx.strokeStyle = '#f00';
             ctx.beginPath();
-            ctx.ellipse(this.x, this.y, this.config.size * 1.2, this.config.size * 1.2, 0, 0, 2 * Math.PI);
+            ctx.ellipse(this.x, this.y, this.config.size * 1.5, this.config.size * 1.5, 0, 0, 2 * Math.PI);
             ctx.stroke();
         }
 
         ctx.fillStyle = 'blue';
         ctx.beginPath();
         ctx.moveTo(this.x, this.y);
-        ctx.ellipse(this.x, this.y, this.config.size * 0.8, this.config.size * 0.8, 0, 0, 2 * Math.PI * Math.min(1, this.timeSinceEating / this.config.eatingCooldown));
+        ctx.ellipse(this.x, this.y, this.config.size * 0.4, this.config.size * 0.4, 0, 0, 2 * Math.PI * Math.min(1, this.timeSinceEating / this.config.eatingCooldown));
         ctx.fill();
 
         this.config.draw();

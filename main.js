@@ -61,6 +61,7 @@ const Game = () => {
         });
 
         items = items.filter(item => !item.eaten);
+        items.forEach(item => item.update(deltaTime));
         window.items = items;
 
         foodTimer += deltaTime;
@@ -107,175 +108,68 @@ window.onload = () => {
 };
 
 const GAME_UPGRADES = [
+    [{ cost: 10, value: 2 }, { cost: 100, value: 3 }, { cost: 500, value: 4 }]
+        .map(({ cost, value }) => ({
+            text: 'More valuable food',
+            cost,
+            upgrade: config => {
+                config.gameState.newFoodValue = value;
+            },
+        })),
     [
-        {
-            text: 'Double food',
-            cost: 10,
+        { cost: 20, value: 1.9 },
+        { cost: 50, value: 1.75 },
+        { cost: 100, value: 1.55 },
+        { cost: 200, value: 1.4 },
+        { cost: 500, value: 1.25 },
+        { cost: 1000, value: 1.1 },
+        { cost: 1500, value: 1 },
+    ]
+        .map(({ cost, value }) => ({
+            text: 'Throw food faster',
+            cost,
             upgrade: config => {
-                config.gameState.newFoodValue = 2;
+                config.gameState.foodRate = value;
             },
-        },
-        {
-            text: 'Triple food',
-            cost: 100,
-            upgrade: config => {
-                config.gameState.newFoodValue = 3;
-            },
-        },
-        {
-            text: 'Quadruple food',
-            cost: 500,
-            upgrade: config => {
-                config.gameState.newFoodValue = 4;
-            },
-        },
-    ],
+        })),
     [
-        {
-            text: 'Faster food',
-            cost: 20,
+        { cost: 10, value: 2 },
+        { cost: 30, value: 3 },
+        { cost: 80, value: 4 },
+        { cost: 120, value: 5 },
+        { cost: 200, value: 7 },
+        { cost: 400, value: 10 },
+        { cost: 1000, value: 15 },
+    ]
+        .map(({ cost, value }) => ({
+            text: 'Bigger handfuls',
+            cost,
             upgrade: config => {
-                config.gameState.foodRate = 1.9;
+                config.gameState.foodClusterSize = value;
             },
-        },
-        {
-            text: 'Faster food',
-            cost: 50,
-            upgrade: config => {
-                config.gameState.foodRate = 1.75;
-            },
-        },
-        {
-            text: 'Faster food',
-            cost: 100,
-            upgrade: config => {
-                config.gameState.foodRate = 1.55;
-            },
-        },
-        {
-            text: 'Faster food',
-            cost: 200,
-            upgrade: config => {
-                config.gameState.foodRate = 1.4;
-            },
-        },
-        {
-            text: 'Faster food',
-            cost: 500,
-            upgrade: config => {
-                config.gameState.foodRate = 1.25;
-            },
-        },
-        {
-            text: 'Faster food',
-            cost: 1000,
-            upgrade: config => {
-                config.gameState.foodRate = 1.1;
-            },
-        },
-        {
-            text: 'Faster food',
-            cost: 1500,
-            upgrade: config => {
-                config.gameState.foodRate = 1;
-            },
-        },
-    ],
+        })),
     [
-        {
-            text: 'Bigger handfuls',
-            cost: 10,
+        { cost: 10, value: 70 },
+        { cost: 500, value: 100 },
+        { cost: 2000, value: 150 },
+    ]
+        .map(({ cost, value }) => ({
+            text: 'More max food',
+            cost,
             upgrade: config => {
-                config.gameState.foodClusterSize = 2;
+                config.gameState.maxFood = value;
             },
-        },
-        {
-            text: 'Bigger handfuls',
-            cost: 30,
-            upgrade: config => {
-                config.gameState.foodClusterSize = 3;
-            },
-        },
-        {
-            text: 'Bigger handfuls',
-            cost: 80,
-            upgrade: config => {
-                config.gameState.foodClusterSize = 4;
-            },
-        },
-        {
-            text: 'Bigger handfuls',
-            cost: 120,
-            upgrade: config => {
-                config.gameState.foodClusterSize = 5;
-            },
-        },
-        {
-            text: 'Bigger handfuls',
-            cost: 200,
-            upgrade: config => {
-                config.gameState.foodClusterSize = 7;
-            },
-        },
-        {
-            text: 'Bigger handfuls',
-            cost: 400,
-            upgrade: config => {
-                config.gameState.foodClusterSize = 10;
-            },
-        },
-        {
-            text: 'Bigger handfuls',
-            cost: 1000,
-            upgrade: config => {
-                config.gameState.foodClusterSize = 15;
-            },
-        },
-    ],
+        })),
     [
-        {
-            text: 'More food capacity',
-            cost: 10,
-            upgrade: config => {
-                config.gameState.maxFood = 70;
-            },
-        },
-        {
-            text: 'Even more food',
-            cost: 500,
-            upgrade: config => {
-                config.gameState.maxFood = 100;
-            },
-        },
-        {
-            text: 'Lots of space for food',
-            cost: 2000,
-            upgrade: config => {
-                config.gameState.maxFood = 150;
-            },
-        },
-    ],
-    [
-        {
-            text: 'A second creature',
-            cost: 10,
+        { cost: 10 },
+        { cost: 100 },
+        { cost: 1000 },
+    ]
+        .map(({ cost }) => ({
+            text: 'Another creature',
+            cost,
             upgrade: config => {
                 config.gameState.creatures.push(new Creature(400, 300, config.gameState));
             },
-        },
-        {
-            text: 'A third creature',
-            cost: 100,
-            upgrade: config => {
-                config.gameState.creatures.push(new Creature(400, 300, config.gameState));
-            },
-        },
-        {
-            text: 'A fourth creature',
-            cost: 1000,
-            upgrade: config => {
-                config.gameState.creatures.push(new Creature(400, 300, config.gameState));
-            },
-        },
-    ],
+        })),
 ];
