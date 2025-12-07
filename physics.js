@@ -60,54 +60,55 @@ const v_cap_magnitude = (v, max_magnitude) => {
     return v_scale(v, max_magnitude / current);
 };
 
+const v_angle = ({ x, y }) => Math.atan2(y, x);
+
+const v_for_angle = angle => {
+    return { x: Math.cos(angle), y: Math.sin(angle) };
+};
+
+const v_lerp = (a, b, t) => {
+    return v_add(
+        v_scale(a, 1 - t),
+        v_scale(b, t),
+    );
+};
+
 const dot_product = (a, b) => {
     return a.x * b.x + a.y * b.y;
 };
 
 const is_angle_higher = (currentAngle, targetAngle) => {
-    if (targetAngle > currentAngle && targetAngle - currentAngle < Math.PI) {
-        return true;
-    } else if (targetAngle < currentAngle && currentAngle - targetAngle < Math.PI) {
-        return false;
-    } else if (targetAngle > currentAngle) {
-        return false;
-    }
+    const relAngle = relative_angle(currentAngle, targetAngle);
 
-    return true;
+    return relAngle > 0;
 }
 
+const relative_angle = (referencePoint, targetAngle) => {
+    const difference = targetAngle - referencePoint;
+    if (difference < -Math.PI) {
+        return difference + 2 * Math.PI;
+    } else if (difference <= Math.PI) {
+        return difference;
+    } else {
+        return difference - 2 * Math.PI;
+    }
+};
+
 const approach_angle = (currentAngle, targetAngle, step) => {
-    if (is_angle_higher(currentAngle, targetAngle)) {
-        const next = currentAngle + step;
-        if (next > Math.PI) {
-            if (next > targetAngle + 2 * Math.PI) {
-                return targetAngle;
-            }
+    const relAngle = relative_angle(currentAngle, targetAngle);
 
-            return next;
-        }
-
-        if (currentAngle < targetAngle && targetAngle < next) {
+    if (relAngle > 0) {
+        if (step >= relAngle) {
             return targetAngle;
         }
 
-        return next;
+        return currentAngle + step;
     } else {
-        const next = currentAngle - step;
-
-        if (next < - Math.PI) {
-            if (next < targetAngle - 2 * Math.PI) {
-                return targetAngle;
-            }
-
-            return next;
+        if (step >= -relAngle) {
+            return targetAngle;
         }
 
-        if (currentAngle > targetAngle && next < targetAngle) {
-            return targetAngle
-        }
-
-        return next;
+        return currentAngle - step;
     }
 };
 

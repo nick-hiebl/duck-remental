@@ -9,6 +9,7 @@ const Game = () => {
     };
 
     gameState.creatures.push(new Creature(100, 300, gameState));
+    gameState.creatures.push(new Crab(400, 300, gameState));
 
     window.gameState = gameState;
 
