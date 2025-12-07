@@ -1,4 +1,4 @@
-const CRAB_TARGET_ANGLE = 0.1;
+const CRAB_TARGET_ANGLE = 0.2;
 
 class Crab {
     constructor(x, y, gameState) {
@@ -61,6 +61,22 @@ class Crab {
         ctx.moveTo(leftShoulder.x, leftShoulder.y);
         const leftHand = v_add(this.pos, this.leftArmOff)
         ctx.lineTo(leftHand.x, leftHand.y);
+        ctx.stroke();
+
+        ctx.save();
+        ctx.translate(leftHand.x, leftHand.y);
+        const leftArmHeading = v_angle(v_sub(leftHand, leftShoulder));
+        ctx.rotate(leftArmHeading);
+        // Back half of claw
+        ctx.beginPath();
+        ctx.ellipse(this.config.size * .3, this.config.size * -0.1, this.config.size * 1.4, this.config.size * 0.88, -0.3, Math.PI, 2 * Math.PI);
+        ctx.fill();
+        // Front half of claw
+        ctx.beginPath();
+        ctx.ellipse(this.config.size * .3, this.config.size * 0.1, this.config.size * 1.1, this.config.size * 0.6, 0.3, 0, Math.PI);
+        ctx.fill();
+
+        ctx.restore();
         
         const rightShoulder = v_add(this.pos, v_scale(v_for_angle(heading + Math.PI / 2), this.config.size * 2));
         ctx.moveTo(rightShoulder.x, rightShoulder.y);
@@ -68,10 +84,20 @@ class Crab {
         ctx.lineTo(rightHand.x, rightHand.y);
         ctx.stroke();
 
+        ctx.save();
+        ctx.translate(rightHand.x, rightHand.y);
+        const rightArmHeading = v_angle(v_sub(rightHand, rightShoulder));
+        ctx.rotate(rightArmHeading);
+        // Front half of claw
         ctx.beginPath();
-        ctx.ellipse(leftHand.x, leftHand.y, this.config.size * 0.75, this.config.size * 0.75, 0, 0, 2 * Math.PI);
-        ctx.ellipse(rightHand.x, rightHand.y, this.config.size * 0.75, this.config.size * 0.75, 0, 0, 2 * Math.PI);
+        ctx.ellipse(this.config.size * .3, this.config.size * -0.1, this.config.size * 1.1, this.config.size * 0.6, -0.3, Math.PI, 2 * Math.PI);
         ctx.fill();
+        // Back half of claw
+        ctx.beginPath();
+        ctx.ellipse(this.config.size * .3, this.config.size * 0.1, this.config.size * 1.4, this.config.size * 0.88, 0.3, 0, Math.PI);
+        ctx.fill();
+
+        ctx.restore();
 
         ctx.lineWidth = 1;
         if (this.target) {
