@@ -63,3 +63,54 @@ const v_cap_magnitude = (v, max_magnitude) => {
 const dot_product = (a, b) => {
     return a.x * b.x + a.y * b.y;
 };
+
+const is_angle_higher = (currentAngle, targetAngle) => {
+    if (targetAngle > currentAngle && targetAngle - currentAngle < Math.PI) {
+        return true;
+    } else if (targetAngle < currentAngle && currentAngle - targetAngle < Math.PI) {
+        return false;
+    } else if (targetAngle > currentAngle) {
+        return false;
+    }
+
+    return true;
+}
+
+const approach_angle = (currentAngle, targetAngle, step) => {
+    if (is_angle_higher(currentAngle, targetAngle)) {
+        const next = currentAngle + step;
+        if (next > Math.PI) {
+            if (next > targetAngle + 2 * Math.PI) {
+                return targetAngle;
+            }
+
+            return next;
+        }
+
+        if (currentAngle < targetAngle && targetAngle < next) {
+            return targetAngle;
+        }
+
+        return next;
+    } else {
+        const next = currentAngle - step;
+
+        if (next < - Math.PI) {
+            if (next < targetAngle - 2 * Math.PI) {
+                return targetAngle;
+            }
+
+            return next;
+        }
+
+        if (currentAngle > targetAngle && next < targetAngle) {
+            return targetAngle
+        }
+
+        return next;
+    }
+};
+
+const sigmoid = (steepness, median, x) => {
+    return 1 / (1 + Math.exp(- steepness * (x - median)));
+};

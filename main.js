@@ -108,7 +108,15 @@ window.onload = () => {
 };
 
 const GAME_UPGRADES = [
-    [{ cost: 10, value: 2 }, { cost: 100, value: 3 }, { cost: 500, value: 4 }]
+    [
+        { cost: 10, value: 2 },
+        { cost: 100, value: 3 },
+        { cost: 500, value: 4 },
+        { cost: 2000, value: 5 },
+        { cost: 5000, value: 6 },
+        { cost: 8000, value: 8 },
+        { cost: 10000, value: 10 },
+    ]
         .map(({ cost, value }) => ({
             text: 'More valuable food',
             cost,
@@ -124,6 +132,9 @@ const GAME_UPGRADES = [
         { cost: 500, value: 1.25 },
         { cost: 1000, value: 1.1 },
         { cost: 1500, value: 1 },
+        { cost: 5000, value: 0.9 },
+        { cost: 10000, value: 0.8 },
+        { cost: 20000, value: 0.7 },
     ]
         .map(({ cost, value }) => ({
             text: 'Throw food faster',
@@ -152,6 +163,9 @@ const GAME_UPGRADES = [
         { cost: 10, value: 70 },
         { cost: 500, value: 100 },
         { cost: 2000, value: 150 },
+        { cost: 5000, value: 200 },
+        { cost: 12000, value: 300 },
+        { cost: 25000, value: 400 },
     ]
         .map(({ cost, value }) => ({
             text: 'More max food',
@@ -164,6 +178,11 @@ const GAME_UPGRADES = [
         { cost: 10 },
         { cost: 100 },
         { cost: 1000 },
+        { cost: 10000 },
+        { cost: 100000 },
+        { cost: 1000000 },
+        { cost: 10000000 },
+        { cost: 100000000 },
     ]
         .map(({ cost }) => ({
             text: 'Another creature',
