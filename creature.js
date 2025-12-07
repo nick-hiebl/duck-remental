@@ -22,8 +22,6 @@ class Creature {
         this.vx = 0;
         this.vy = 0;
 
-        this.heading = { x: 1, y: 0 };
-
         this.score = 0;
         this.timeSinceEating = 0;
 
@@ -32,6 +30,9 @@ class Creature {
         this.hovered = false;
 
         this.config = new CreatureConfig(this, gameState);
+
+        this.heading = { x: 1, y: 0 };
+        this.beakOffset = this.getBeakOffset();
     }
 
     get pos() {
@@ -68,8 +69,8 @@ class Creature {
         ctx.ellipse(this.x, this.y, this.config.size * 1.2, this.config.size, heading, 0, 2 * Math.PI);
         ctx.fill();
 
-        const beakPosition = this.getBeakPosition();
-        const headPosition = this.getHeadPosition();
+        const beakPosition = v_add(this.pos, this.beakOffset);
+        const headPosition = this.getHeadPosition(beakPosition);
 
         const beakHeading = Math.atan2(beakPosition.y - headPosition.y, beakPosition.x - headPosition.x);
 
@@ -110,21 +111,22 @@ class Creature {
         this.config.draw();
     }
 
-    getBeakPosition() {
+    getBeakOffset() {
         if (this.target && !this.target.eaten) {
-            const distance = v_mag(v_sub(this.target, this));
+            const offset = v_sub(this.target, this);
+            const distance = v_mag(offset);
 
-            if (distance <= this.config.eatDist - this.config.headSize) {
-                return this.target;
+            if (distance <= this.config.eatDist - 1 * this.config.headSize) {
+                return v_sub(this.target, this.pos);
+            } else if (distance <= this.config.eatDist) {
+                return v_set_magnitude(offset, this.config.eatDist - this.config.headSize);
             }
         }
 
-        return v_add(this.pos, v_set_magnitude(this.heading, this.config.eatDist - this.config.headSize));
+        return v_set_magnitude(this.heading, this.config.eatDist - this.config.headSize);
     }
 
-    getHeadPosition() {
-        const beakPosition = this.getBeakPosition();
-
+    getHeadPosition(beakPosition) {
         const beakToBody = v_sub(this.pos, beakPosition);
 
         return v_add(beakPosition, v_set_magnitude(beakToBody, this.config.headSize));
@@ -217,7 +219,7 @@ class Creature {
             this.heading = { x: Math.cos(nextHeading), y: Math.sin(nextHeading) };
 
             const shouldSlowDownForArrival = directionalOffset > 0.8 && currentVelocity * 0.2 > (distance - this.config.eatDist);
-            const slowDownFactor = shouldSlowDownForArrival ? 0.1 : 1;
+            const slowDownFactor = shouldSlowDownForArrival ? 0.2 : 1;
 
             const targetVelocity = this.config.speed *
                 Math.pow(0.5 + 0.5 * directionalOffset, 10) *
@@ -248,6 +250,8 @@ class Creature {
         if (isNaN(this.pos.x) || isNaN(this.pos.y)) {
             console.log(this.vel, deltaTime);
         }
+
+        this.beakOffset = v_add(v_scale(this.beakOffset, 0.9), v_scale(this.getBeakOffset(), 0.1));
     }
 }
 
