@@ -255,7 +255,10 @@ class Creature {
 }
 
 class CreatureConfig {
+    static instances = 0;
+
     constructor(parent, gameState) {
+        this.id = ++CreatureConfig.instances;
         this.parent = parent;
         this.gameState = gameState;
 
@@ -274,18 +277,15 @@ class CreatureConfig {
 
         const box = document.getElementById('controls');
 
-        const upgradeBox = createElement('div');
+        const title = createElement('strong', { text: `Duck ${this.id}` });
+
         this.upgrades = UPGRADES.map(list => {
             return new Upgrade(list, this);
         });
 
-        this.upgrades.forEach(upgrade => {
-            upgradeBox.appendChild(upgrade.button);
-        });
-
         const myDiv = createElement('div', {
             classList: ['creature-control-box'],
-            children: this.upgrades.map(u => u.button),
+            children: [title, ...this.upgrades.map(u => u.button)],
         });
 
         myDiv.addEventListener('mouseenter', () => {

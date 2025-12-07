@@ -53,7 +53,6 @@ class Crab {
     draw(ctx) {
         const heading = Math.atan2(this.heading.y, this.heading.x);
 
-        // ctx.fillStyle = 'blue';
         ctx.lineWidth = this.config.size * 0.35;
         ctx.strokeStyle = 'darkorange';
         ctx.lineCap = 'round';
@@ -62,6 +61,14 @@ class Crab {
             v_circle(ctx, pos, 2);
             v_line(ctx, pos, this.visualLegEnds[index]);
         });
+
+        if (this.hovered) {
+            ctx.strokeStyle = 'red';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.ellipse(this.x, this.y, this.config.size * 1.5, this.config.size * 3, heading, 0, 2 * Math.PI);
+            ctx.stroke();
+        }
 
         ctx.lineCap = 'butt';
 
@@ -457,7 +464,10 @@ class Crab {
 
 
 class CrabConfig {
+    static instances = 0;
+
     constructor(parent, gameState) {
+        this.id = ++CrabConfig.instances;
         this.parent = parent;
         this.gameState = gameState;
 
@@ -476,18 +486,15 @@ class CrabConfig {
 
         const box = document.getElementById('controls');
 
-        const upgradeBox = createElement('div');
+        const title = createElement('strong', { text: `Crab ${this.id}` });
+
         this.upgrades = UPGRADES.map(list => {
             return new Upgrade(list, this);
         });
 
-        this.upgrades.forEach(upgrade => {
-            upgradeBox.appendChild(upgrade.button);
-        });
-
         const myDiv = createElement('div', {
             classList: ['creature-control-box'],
-            children: this.upgrades.map(u => u.button),
+            children: [title, ...this.upgrades.map(u => u.button)],
         });
 
         myDiv.addEventListener('mouseenter', () => {

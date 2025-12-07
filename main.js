@@ -4,12 +4,12 @@ const Game = () => {
         newFoodValue: 1,
         foodRate: 2.4,
         foodClusterSize: 1,
+        multiClusterBase: 0,
         maxFood: 50,
         creatures: [],
     };
 
     gameState.creatures.push(new Creature(100, 300, gameState));
-    gameState.creatures.push(new Crab(400, 300, gameState));
 
     window.gameState = gameState;
 
@@ -28,11 +28,16 @@ const Game = () => {
     window.items = items;
 
     const placeFood = () => {
-        const pos = { x: Math.random() * 800, y: Math.random() * 600 };
-        for (let i = 0; i < gameState.foodClusterSize; i++) {
-            const off = { x: Math.random() * 40 - 20, y: Math.random() * 40 - 20 };
-            const spot = v_add(pos, off);
-            items.push(new Pellet(spot.x, spot.y, gameState));
+        const numBundles = Math.ceil(Math.random() + gameState.multiClusterBase);
+
+        for (let j = 0; j < numBundles; j++) {
+            const pos = { x: Math.random() * 800, y: Math.random() * 600 };
+            const bundleRadius = gameState.foodClusterSize * 5;
+            for (let i = 0; i < gameState.foodClusterSize; i++) {
+                const off = { x: Math.random() * bundleRadius - bundleRadius / 2, y: Math.random() * bundleRadius - bundleRadius / 2 };
+                const spot = v_add(pos, off);
+                items.push(new Pellet(spot.x, spot.y, gameState));
+            }
         }
     };
 
@@ -121,6 +126,8 @@ const GAME_UPGRADES = [
         { cost: 5000, value: 6 },
         { cost: 8000, value: 8 },
         { cost: 10000, value: 10 },
+        { cost: 40000, value: 12 },
+        { cost: 100000, value: 16 },
     ]
         .map(({ cost, value }) => ({
             text: 'More valuable food',
@@ -140,6 +147,13 @@ const GAME_UPGRADES = [
         { cost: 5000, value: 0.9 },
         { cost: 10000, value: 0.8 },
         { cost: 20000, value: 0.7 },
+        { cost: 50000, value: 0.63 },
+        { cost: 100000, value: 0.6 },
+        { cost: 200000, value: 0.55 },
+        { cost: 500000, value: 0.52 },
+        { cost: 1000000, value: 0.5 },
+        { cost: 2000000, value: 0.48 },
+        { cost: 5000000, value: 0.45 },
     ]
         .map(({ cost, value }) => ({
             text: 'Throw food faster',
@@ -156,6 +170,8 @@ const GAME_UPGRADES = [
         { cost: 200, value: 7 },
         { cost: 400, value: 10 },
         { cost: 1000, value: 15 },
+        { cost: 2000, value: 20 },
+        { cost: 5000, value: 25 },
     ]
         .map(({ cost, value }) => ({
             text: 'Bigger handfuls',
@@ -165,12 +181,32 @@ const GAME_UPGRADES = [
             },
         })),
     [
+        { cost: 50, value: 0.1 },
+        { cost: 300, value: 0.4 },
+        { cost: 1000, value: 0.6 },
+        { cost: 5000, value: 0.8 },
+        { cost: 10000, value: 1 },
+        { cost: 30000, value: 1.3 },
+        { cost: 50000, value: 1.5 },
+        { cost: 100000, value: 1.8 },
+        { cost: 200000, value: 2 },
+    ]
+        .map(({ cost, value }) => ({
+            text: 'Multi cluster chance',
+            cost,
+            upgrade: config => {
+                config.gameState.multiClusterBase = value;
+            }
+        })),
+    [
         { cost: 10, value: 70 },
         { cost: 500, value: 100 },
         { cost: 2000, value: 150 },
         { cost: 5000, value: 200 },
         { cost: 12000, value: 300 },
         { cost: 25000, value: 400 },
+        { cost: 50000, value: 500 },
+        { cost: 100000, value: 650 },
     ]
         .map(({ cost, value }) => ({
             text: 'More max food',
@@ -190,10 +226,27 @@ const GAME_UPGRADES = [
         { cost: 100000000 },
     ]
         .map(({ cost }) => ({
-            text: 'Another creature',
+            text: 'Another duck',
             cost,
             upgrade: config => {
                 config.gameState.creatures.push(new Creature(400, 300, config.gameState));
+            },
+        })),
+    [
+        { cost: 30 },
+        { cost: 300 },
+        { cost: 3000 },
+        { cost: 30000 },
+        { cost: 300000 },
+        { cost: 3000000 },
+        { cost: 30000000 },
+        { cost: 300000000 },
+    ]
+        .map(({ cost }) => ({
+            text: 'A crab',
+            cost,
+            upgrade: config => {
+                config.gameState.creatures.push(new Crab(400, 300, config.gameState));
             },
         })),
 ];
