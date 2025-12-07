@@ -22,6 +22,8 @@ class Creature {
         this.vx = 0;
         this.vy = 0;
 
+        this.heading = { x: 1, y: 0 };
+
         this.score = 0;
         this.timeSinceEating = 0;
 
@@ -51,11 +53,6 @@ class Creature {
     }
 
     draw(ctx) {
-        ctx.fillStyle = 'yellow';
-        ctx.beginPath();
-        ctx.ellipse(this.x, this.y, this.config.size, this.config.size, 0, 0, 2 * Math.PI);
-        ctx.fill();
-
         if (this.hovered) {
             ctx.lineWidth = 2;
             ctx.strokeStyle = '#f00';
@@ -64,13 +61,66 @@ class Creature {
             ctx.stroke();
         }
 
-        ctx.fillStyle = 'blue';
+        const heading = Math.atan2(this.heading.y, this.heading.x);
+
+        ctx.fillStyle = 'brown';
         ctx.beginPath();
-        ctx.moveTo(this.x, this.y);
-        ctx.ellipse(this.x, this.y, this.config.size * 0.4, this.config.size * 0.4, 0, 0, 2 * Math.PI * Math.min(1, this.timeSinceEating / this.config.eatingCooldown));
+        ctx.ellipse(this.x, this.y, this.config.size * 1.2, this.config.size, heading, 0, 2 * Math.PI);
         ctx.fill();
 
+        const beakPosition = this.getBeakPosition();
+        const headPosition = this.getHeadPosition();
+
+        const beakHeading = Math.atan2(beakPosition.y - headPosition.y, beakPosition.x - headPosition.x);
+
+        ctx.fillStyle = 'yellow';
+        ctx.beginPath();
+        ctx.ellipse(beakPosition.x, beakPosition.y, this.config.headSize, this.config.headSize * 0.5, beakHeading, 0, 2 * Math.PI)
+        ctx.fill();
+
+        ctx.fillStyle = 'green';
+        ctx.beginPath();
+        ctx.ellipse(headPosition.x, headPosition.y, this.config.headSize, this.config.headSize, 0, 0, 2 * Math.PI);
+        ctx.fill();
+
+        ctx.fillStyle = 'black';
+        ctx.beginPath();
+        const eyeOffsetRadius = this.config.headSize * 0.6;
+        const eye1Angle = beakHeading + Math.PI * 3 / 10;
+        const eye1Pos = v_add(headPosition, v_scale({ x: Math.cos(eye1Angle), y: Math.sin(eye1Angle) }, eyeOffsetRadius));
+        ctx.ellipse(eye1Pos.x, eye1Pos.y, 2, 2, 0, 0, 2 * Math.PI);
+        const eye2Angle = beakHeading - Math.PI * 3 / 10;
+        const eye2Pos = v_add(headPosition, v_scale({ x: Math.cos(eye2Angle), y: Math.sin(eye2Angle) }, eyeOffsetRadius));
+        ctx.ellipse(eye2Pos.x, eye2Pos.y, 2, 2, 0, 0, 2 * Math.PI);
+        ctx.fill();
+
+        // ctx.fillStyle = 'blue';
+        // ctx.beginPath();
+        // ctx.moveTo(this.x, this.y);
+        // ctx.ellipse(this.x, this.y, this.config.size * 0.4, this.config.size * 0.4, 0, 0, 2 * Math.PI * Math.min(1, this.timeSinceEating / this.config.eatingCooldown));
+        // ctx.fill();
+
         this.config.draw();
+    }
+
+    getBeakPosition() {
+        if (this.target && !this.target.eaten) {
+            const distance = v_mag(v_sub(this.target, this));
+
+            if (distance <= this.config.eatDist - this.config.headSize) {
+                return this.target;
+            }
+        }
+
+        return v_add(this.pos, v_set_magnitude(this.heading, this.config.eatDist - this.config.headSize));
+    }
+
+    getHeadPosition() {
+        const beakPosition = this.getBeakPosition();
+
+        const beakToBody = v_sub(this.pos, beakPosition);
+
+        return v_add(beakPosition, v_set_magnitude(beakToBody, this.config.headSize));
     }
 
     isEatingOnCooldown() {
@@ -165,6 +215,11 @@ class Creature {
         }
 
         this.pos = v_add(this.pos, v_scale(this.vel, deltaTime));
+
+        if (this.vel.x !== 0 || this.vel.y !== 0) {
+            this.heading = this.vel;
+        }
+
         if (isNaN(this.pos.x) || isNaN(this.pos.y)) {
             console.log(this.vel, deltaTime);
         }
@@ -178,6 +233,7 @@ class CreatureConfig {
 
         this.eatDist = EAT_DIST;
         this.size = RADIUS;
+        this.headSize = RADIUS * 0.75;
 
         this.decelRate = 360;
         this.maxEatingSpeed = MAX_EATING_SPEED;
