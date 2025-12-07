@@ -12,7 +12,7 @@ const EAT_DIST = 20;
 
 const MAX_EATING_SPEED = 0.1;
 
-class Creature {
+class Duck {
     constructor(x, y, gameState) {
         this.id = Math.random().toString().slice(2);
 
@@ -29,7 +29,7 @@ class Creature {
 
         this.hovered = false;
 
-        this.config = new CreatureConfig(this, gameState);
+        this.config = new DuckConfig(this, gameState);
 
         this.heading = { x: 1, y: 0 };
         this.beakOffset = this.getBeakOffset();
@@ -254,11 +254,11 @@ class Creature {
     }
 }
 
-class CreatureConfig {
+class DuckConfig {
     static instances = 0;
 
     constructor(parent, gameState) {
-        this.id = ++CreatureConfig.instances;
+        this.id = ++DuckConfig.instances;
         this.parent = parent;
         this.gameState = gameState;
 
@@ -279,7 +279,7 @@ class CreatureConfig {
 
         const title = createElement('strong', { text: `Duck ${this.id}` });
 
-        this.upgrades = UPGRADES.map(list => {
+        this.upgrades = DUCK_UPGRADES.map(list => {
             return new Upgrade(list, this);
         });
 
@@ -303,7 +303,7 @@ class CreatureConfig {
     }
 }
 
-const UPGRADES = [
+const DUCK_UPGRADES = [
     [
         { cost: 1, speed: 130, accel: 150, decel: 480, turning: 2.2 },
         { cost: 10, speed: 170, accel: 190, decel: 600, turning: 3 },

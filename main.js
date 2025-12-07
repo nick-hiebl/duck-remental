@@ -9,7 +9,7 @@ const Game = () => {
         creatures: [],
     };
 
-    gameState.creatures.push(new Creature(100, 300, gameState));
+    gameState.creatures.push(new Duck(100, 300, gameState));
 
     window.gameState = gameState;
 
@@ -229,7 +229,7 @@ const GAME_UPGRADES = [
             text: 'Another duck',
             cost,
             upgrade: config => {
-                config.gameState.creatures.push(new Creature(400, 300, config.gameState));
+                config.gameState.creatures.push(new Duck(400, 300, config.gameState));
             },
         })),
     [

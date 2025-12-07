@@ -462,6 +462,8 @@ class Crab {
     }
 }
 
+const CRAB_RADIUS = 7;
+const CRAB_EAT_DIST = 12;
 
 class CrabConfig {
     static instances = 0;
@@ -471,9 +473,8 @@ class CrabConfig {
         this.parent = parent;
         this.gameState = gameState;
 
-        this.eatDist = EAT_DIST;
-        this.size = RADIUS;
-        this.headSize = RADIUS * 0.75;
+        this.eatDist = CRAB_EAT_DIST;
+        this.size = CRAB_RADIUS;
 
         this.decelRate = 360;
         this.maxEatingSpeed = MAX_EATING_SPEED;
@@ -488,7 +489,7 @@ class CrabConfig {
 
         const title = createElement('strong', { text: `Crab ${this.id}` });
 
-        this.upgrades = UPGRADES.map(list => {
+        this.upgrades = CRAB_UPGRADES.map(list => {
             return new Upgrade(list, this);
         });
 
@@ -515,11 +516,11 @@ class CrabConfig {
 const CRAB_UPGRADES = [
     [
         { cost: 1, speed: 130, accel: 150, decel: 480, turning: 2.2 },
-        { cost: 10, speed: 170, accel: 190, decel: 600, turning: 3 },
-        { cost: 50, speed: 250, accel: 280, decel: 720, turning: 4.5 },
-        { cost: 250, speed: 400, accel: 400, decel: 900, turning: 6 },
-        { cost: 1000, speed: 550, accel: 800, decel: 1200, turning: 8 },
-        { cost: 2500, speed: 720, accel: 1000, decel: 1800, turning: 10 },
+        { cost: 10, speed: 160, accel: 190, decel: 600, turning: 3 },
+        { cost: 50, speed: 200, accel: 280, decel: 720, turning: 4.5 },
+        { cost: 250, speed: 250, accel: 400, decel: 900, turning: 6 },
+        { cost: 1000, speed: 310, accel: 800, decel: 1200, turning: 8 },
+        { cost: 2500, speed: 380, accel: 1000, decel: 1800, turning: 10 },
     ]
         .map(({ cost, speed, accel, decel, turning }) => ({
             text: 'Faster',
@@ -548,20 +549,19 @@ const CRAB_UPGRADES = [
             },
         })),
     [
-        { cost: 1, value: 24 },
-        { cost: 10, value: 27 },
-        { cost: 50, value: 30 },
-        { cost: 250, value: 33 },
-        { cost: 1000, value: 36 },
-        { cost: 3000, value: 40 },
+        { cost: 1, value: 15 },
+        { cost: 10, value: 17 },
+        { cost: 50, value: 19 },
+        { cost: 250, value: 21 },
+        { cost: 1000, value: 23 },
+        { cost: 3000, value: 25 },
     ]
         .map(({ cost, value }) => ({
             text: 'Size',
             cost,
             upgrade: config => {
                 config.eatDist = value;
-                config.size = RADIUS / EAT_DIST * value;
-                config.headSize = config.size * 0.75;
+                config.size = CRAB_RADIUS / CRAB_EAT_DIST * value;
             },
         })),
 ];
