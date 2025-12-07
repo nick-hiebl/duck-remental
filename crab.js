@@ -54,7 +54,7 @@ class Crab {
         const heading = Math.atan2(this.heading.y, this.heading.x);
 
         // ctx.fillStyle = 'blue';
-        ctx.lineWidth = this.config.size * 0.3;
+        ctx.lineWidth = this.config.size * 0.35;
         ctx.strokeStyle = 'darkorange';
         ctx.lineCap = 'round';
         const legBases = this.getLegBases();
@@ -356,6 +356,7 @@ class Crab {
             const target = strategy.target;
 
             const offset = v_sub(target, this);
+            const distance = v_mag(offset);
 
             const headingAngle = Math.atan2(this.heading.y, this.heading.x);
             const offsetAngle = Math.atan2(offset.y, offset.x);
@@ -371,8 +372,10 @@ class Crab {
                 const nextHeading = approach_angle(motionAngle, offsetAngle - CRAB_TARGET_ANGLE, this.config.turningRate * deltaTime) + Math.PI / 2;
                 this.heading = { x: Math.cos(nextHeading), y: Math.sin(nextHeading) };
 
-                const tooClose = v_mag(offset) < this.config.size * 3;
-                const directionalSpeed = tooClose ? -this.config.speed : this.config.speed;
+                const tooClose = distance < this.config.size * 3;
+                const shouldSlowDown = Math.abs(distance - this.config.size * 3) < this.config.size;
+                const slowDownFactor = shouldSlowDown ? 0.2 : 1;
+                const directionalSpeed = slowDownFactor * (tooClose ? -this.config.speed : this.config.speed);
                 let targetSpeed;
                 if (tooClose && dot_product(offset, this.vel) < 0) {
                     targetSpeed = approach(-v_mag(this.vel), directionalSpeed, this.config.accelRate * deltaTime);
@@ -397,8 +400,10 @@ class Crab {
                 const nextHeading = approach_angle(motionAngle, offsetAngle + CRAB_TARGET_ANGLE, this.config.turningRate * deltaTime) - Math.PI / 2;
                 this.heading = { x: Math.cos(nextHeading), y: Math.sin(nextHeading) };
 
-                const tooClose = v_mag(offset) < this.config.size * 3;
-                const directionalSpeed = tooClose ? -this.config.speed : this.config.speed;
+                const tooClose = distance < this.config.size * 3;
+                const shouldSlowDown = Math.abs(distance - this.config.size * 3) < this.config.size;
+                const slowDownFactor = shouldSlowDown ? 0.2 : 1;
+                const directionalSpeed = slowDownFactor * (tooClose ? -this.config.speed : this.config.speed);
                 let targetSpeed;
                 if (tooClose && dot_product(offset, this.vel) < 0) {
                     targetSpeed = approach(-v_mag(this.vel), directionalSpeed, this.config.accelRate * deltaTime);
@@ -445,7 +450,7 @@ class Crab {
         });
 
         this.visualLegEnds = this.visualLegEnds.map((end, index) => {
-            return v_lerp(end, this.actualLegEnds[index], 0.1);
+            return v_lerp(end, this.actualLegEnds[index], 0.3);
         });
     }
 }
