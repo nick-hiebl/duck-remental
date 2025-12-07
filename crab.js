@@ -263,12 +263,18 @@ class Crab {
                 const nextHeading = approach_angle(motionAngle, offsetAngle - CRAB_TARGET_ANGLE, this.config.turningRate * deltaTime) + Math.PI / 2;
                 this.heading = { x: Math.cos(nextHeading), y: Math.sin(nextHeading) };
 
-                if (Math.abs(motionRelAngle - CRAB_TARGET_ANGLE) > 0.1) {
+                const tooClose = v_mag(offset) < this.config.size * 3;
+                const directionalSpeed = tooClose ? -this.config.speed : this.config.speed;
+                let targetSpeed;
+                if (tooClose && dot_product(offset, this.vel) < 0) {
+                    targetSpeed = approach(-v_mag(this.vel), directionalSpeed, this.config.accelRate * deltaTime);
+                } else {
+                    targetSpeed = approach(v_mag(this.vel), directionalSpeed, this.config.accelRate * deltaTime);
+                }
+
+                if (!tooClose && Math.abs(motionRelAngle - CRAB_TARGET_ANGLE) > 0.1) {
                     brake(0.2);
                 } else {
-                    const tooClose = v_mag(offset < this.config.size * 3);
-                    const directionalSpeed = tooClose ? -this.config.speed : this.config.speed;
-                    const targetSpeed = approach(v_mag(this.vel), directionalSpeed, this.config.accelRate * deltaTime);
                     this.vel = v_scale(
                         moveVec,
                         targetSpeed,
@@ -283,12 +289,18 @@ class Crab {
                 const nextHeading = approach_angle(motionAngle, offsetAngle + CRAB_TARGET_ANGLE, this.config.turningRate * deltaTime) - Math.PI / 2;
                 this.heading = { x: Math.cos(nextHeading), y: Math.sin(nextHeading) };
 
-                if (Math.abs(motionRelAngle + CRAB_TARGET_ANGLE) > 0.1) {
+                const tooClose = v_mag(offset) < this.config.size * 3;
+                const directionalSpeed = tooClose ? -this.config.speed : this.config.speed;
+                let targetSpeed;
+                if (tooClose && dot_product(offset, this.vel) < 0) {
+                    targetSpeed = approach(-v_mag(this.vel), directionalSpeed, this.config.accelRate * deltaTime);
+                } else {
+                    targetSpeed = approach(v_mag(this.vel), directionalSpeed, this.config.accelRate * deltaTime);
+                }
+
+                if (!tooClose && Math.abs(motionRelAngle + CRAB_TARGET_ANGLE) > 0.1) {
                     brake(0.2);
                 } else {
-                    const tooClose = v_mag(offset < this.config.size * 3);
-                    const directionalSpeed = tooClose ? -this.config.speed : this.config.speed;
-                    const targetSpeed = approach(v_mag(this.vel), directionalSpeed, this.config.accelRate * deltaTime);
                     this.vel = v_scale(
                         moveVec,
                         targetSpeed,
