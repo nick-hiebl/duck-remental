@@ -73,6 +73,10 @@ const v_lerp = (a, b, t) => {
     );
 };
 
+const v_right_angle = v => {
+    return { x: -v.y, y: v.x };
+};
+
 const dot_product = (a, b) => {
     return a.x * b.x + a.y * b.y;
 };

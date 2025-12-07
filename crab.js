@@ -1,4 +1,5 @@
 const CRAB_TARGET_ANGLE = 0.2;
+const CRAB_LEG_PAIRS = 4;
 
 class Crab {
     constructor(x, y, gameState) {
@@ -26,6 +27,9 @@ class Crab {
 
         this.leftArmOff = { x: 5, y: -30 };
         this.rightArmOff = { x: 5, y: 30 };
+
+        this.actualLegEnds = this.getIdealLegEnds();
+        this.visualLegEnds = [...this.actualLegEnds];
     }
 
     get pos() {
@@ -49,6 +53,18 @@ class Crab {
     draw(ctx) {
         const heading = Math.atan2(this.heading.y, this.heading.x);
 
+        // ctx.fillStyle = 'blue';
+        ctx.lineWidth = this.config.size * 0.3;
+        ctx.strokeStyle = 'darkorange';
+        ctx.lineCap = 'round';
+        const legBases = this.getLegBases();
+        legBases.forEach((pos, index) => {
+            v_circle(ctx, pos, 2);
+            v_line(ctx, pos, this.visualLegEnds[index]);
+        });
+
+        ctx.lineCap = 'butt';
+
         ctx.fillStyle = 'orange';
         ctx.beginPath();
         ctx.ellipse(this.x, this.y, this.config.size, this.config.size * 2, heading, 0, 2 * Math.PI);
@@ -56,7 +72,7 @@ class Crab {
 
         ctx.lineWidth = this.config.size * 0.4;
         ctx.strokeStyle = 'orange';
-        const leftShoulder = v_add(this.pos, v_scale(v_for_angle(heading - Math.PI / 2), this.config.size * 2));
+        const leftShoulder = v_add(this.pos, v_scale(v_for_angle(heading - Math.PI / 2), this.config.size * 1.9));
         ctx.beginPath();
         ctx.moveTo(leftShoulder.x, leftShoulder.y);
         const leftHand = v_add(this.pos, this.leftArmOff)
@@ -78,7 +94,7 @@ class Crab {
 
         ctx.restore();
         
-        const rightShoulder = v_add(this.pos, v_scale(v_for_angle(heading + Math.PI / 2), this.config.size * 2));
+        const rightShoulder = v_add(this.pos, v_scale(v_for_angle(heading + Math.PI / 2), this.config.size * 1.9));
         ctx.moveTo(rightShoulder.x, rightShoulder.y);
         const rightHand = v_add(this.pos, this.rightArmOff)
         ctx.lineTo(rightHand.x, rightHand.y);
@@ -99,25 +115,91 @@ class Crab {
 
         ctx.restore();
 
-        ctx.lineWidth = 1;
-        if (this.target) {
-            ctx.strokeStyle = 'yellow';
-            ctx.beginPath();
-            ctx.ellipse(this.target.x, this.target.y, 12, 12, 0, 0, 2 * Math.PI);
-            ctx.stroke();
+        const eyeRadius = this.config.size * 0.2;
+        const eyeCenter = v_add(this, v_scale(this.heading, this.config.size * 0.8));
 
-            ctx.beginPath();
-            ctx.moveTo(this.x, this.y);
-            ctx.lineTo(this.x + this.heading.x * 100, this.y + this.heading.y * 100);
-            ctx.stroke();
-        }
+        const rightEye = v_add(eyeCenter, v_scale(v_right_angle(this.heading), this.config.size * 0.9));
+        const leftEye = v_add(eyeCenter, v_scale(v_right_angle(this.heading), -this.config.size * 0.9));
 
-        ctx.strokeStyle = 'yellow';
-        ctx.beginPath();
-        ctx.ellipse(this.x, this.y, this.config.eatDist, this.config.eatDist, 0, 0, 2 * Math.PI);
-        ctx.stroke();
+        ctx.fillStyle = 'black';
+        v_circle(ctx, rightEye, eyeRadius);
+        v_circle(ctx, leftEye, eyeRadius);
+
+        // const idealLegEnds = this.getIdealLegEnds();
+        // idealLegEnds.forEach(pos => {
+        //     v_circle(ctx, pos, 2);
+        // });
+
+        // ctx.beginPath();
+        // ctx.ellipse(leftHand.x, leftHand.y, this.config.size * 0.55, this.config.size * 0.55, 0, 0, 2 * Math.PI);
+        // ctx.ellipse(rightHand.x, rightHand.y, this.config.size * 0.55, this.config.size * 0.55, 0, 0, 2 * Math.PI);
+        // ctx.fill();
+
+        // ctx.lineWidth = 1;
+        // if (this.target) {
+        //     ctx.strokeStyle = 'yellow';
+        //     ctx.beginPath();
+        //     ctx.ellipse(this.target.x, this.target.y, 12, 12, 0, 0, 2 * Math.PI);
+        //     ctx.stroke();
+
+        //     ctx.beginPath();
+        //     ctx.moveTo(this.x, this.y);
+        //     ctx.lineTo(this.x + this.heading.x * 100, this.y + this.heading.y * 100);
+        //     ctx.stroke();
+        // }
+
+        // ctx.strokeStyle = 'yellow';
+        // ctx.beginPath();
+        // ctx.ellipse(this.x, this.y, this.config.eatDist, this.config.eatDist, 0, 0, 2 * Math.PI);
+        // ctx.stroke();
 
         this.config.draw();
+    }
+
+    getLegBases() {
+        const rightVector = v_right_angle(this.heading);
+
+        const rightLegs = [];
+        const leftLegs = [];
+
+        for (let i = 0; i < CRAB_LEG_PAIRS; i++) {
+            const frontness = (CRAB_LEG_PAIRS - 2) / 2 - i;
+            rightLegs.push(v_add(
+                this,
+                v_scale(this.heading, frontness * 0.3 * this.config.size),
+                v_scale(rightVector, (1.2 + frontness * 0.2) * this.config.size),
+            ));
+            leftLegs.push(v_add(
+                this,
+                v_scale(this.heading, frontness * 0.3 * this.config.size),
+                v_scale(rightVector, -(1.2 + frontness * 0.2) * this.config.size),
+            ));
+        }
+
+        return rightLegs.concat(leftLegs);
+    }
+
+    getIdealLegEnds() {
+        const rightVector = v_right_angle(this.heading);
+
+        const rightLegs = [];
+        const leftLegs = [];
+
+        for (let i = 0; i < CRAB_LEG_PAIRS; i++) {
+            const frontness = (CRAB_LEG_PAIRS - 3.9) / 2 - i;
+            rightLegs.push(v_add(
+                this,
+                v_scale(this.heading, frontness * 0.7 * this.config.size),
+                v_scale(rightVector, (4 - frontness * frontness * 0.1) * this.config.size),
+            ));
+            leftLegs.push(v_add(
+                this,
+                v_scale(this.heading, frontness * 0.7 * this.config.size),
+                v_scale(rightVector, -(4 - frontness * frontness * 0.1) * this.config.size),
+            ));
+        }
+
+        return rightLegs.concat(leftLegs);
     }
 
     getIdealHandPositions() {
@@ -348,6 +430,23 @@ class Crab {
         const handPositions = this.getHandPositions(deltaTime);
         this.leftArmOff = v_lerp(this.leftArmOff, handPositions.left, 0.1);
         this.rightArmOff = v_lerp(this.rightArmOff, handPositions.right, 0.1);
+
+        const ALLOWABLE_DIST = this.config.size;
+
+        const idealLegEnds = this.getIdealLegEnds();
+        this.actualLegEnds = this.actualLegEnds.map((legEnd, index) => {
+            const idealEnd = idealLegEnds[index];
+
+            if (dist(legEnd, idealEnd) <= ALLOWABLE_DIST) {
+                return legEnd;
+            }
+
+            return v_add(legEnd, v_scale(v_sub(idealEnd, legEnd), 1.9));
+        });
+
+        this.visualLegEnds = this.visualLegEnds.map((end, index) => {
+            return v_lerp(end, this.actualLegEnds[index], 0.1);
+        });
     }
 }
 
