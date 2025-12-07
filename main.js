@@ -54,6 +54,10 @@ const Game = () => {
     };
 
     const update = deltaTime => {
+        gameState.creatures.sort((a, b) => {
+            return a.config.size - b.config.size;
+        });
+
         gameState.creatures.forEach(creature => {
             creature.update(deltaTime, items);
             gameState.unspentPoints += creature.score;

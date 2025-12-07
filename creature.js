@@ -282,10 +282,7 @@ class CreatureConfig {
 
         const myDiv = createElement('div', {
             classList: ['creature-control-box'],
-            children: [
-                createTextNode(parent.id),
-                upgradeBox,
-            ],
+            children: this.upgrades.map(u => u.button),
         });
 
         myDiv.addEventListener('mouseenter', () => {
@@ -311,12 +308,12 @@ class Upgrade {
         this.progress = 0;
 
         const name = createElement('span', { text: levels[0].text });
-        const levelSpan = createElement('span', { text: '1' });
+        const levelSpan = createElement('span', { text: 'level 0' });
 
         const div1 = createElement('div', {
             children: [
                 name,
-                createTextNode(' (level '),
+                createTextNode(' ('),
                 levelSpan,
                 createTextNode(')'),
             ],
@@ -348,7 +345,7 @@ class Upgrade {
 
                         if (this.levels[this.progress]) {
                             name.textContent = this.levels[this.progress].text;
-                            levelSpan.textContent = this.progress;
+                            levelSpan.textContent = `level ${this.progress}`;
                             priceSpan.textContent = this.levels[this.progress].cost;
                         } else {
                             levelSpan.textContent = 'MAX';
@@ -405,11 +402,11 @@ const UPGRADES = [
         })),
     [
         { cost: 1, value: 24 },
-        { cost: 10, value: 30 },
-        { cost: 50, value: 36 },
-        { cost: 250, value: 48 },
-        { cost: 1000, value: 56 },
-        { cost: 3000, value: 64 },
+        { cost: 10, value: 27 },
+        { cost: 50, value: 30 },
+        { cost: 250, value: 33 },
+        { cost: 1000, value: 36 },
+        { cost: 3000, value: 40 },
     ]
         .map(({ cost, value }) => ({
             text: 'Size',
