@@ -154,6 +154,12 @@ class Frog {
             this.timeSinceLanding += deltaTime;
         }
 
+        const strategy = this.strategy(items);
+
+        if (strategy.id !== 'EAT' && this.tongueGoingOut) {
+            this.tongueGoingOut = false;
+        }
+
         if (!this.tongueGoingOut && this.tonguePos) {
             const tongueToMe = v_sub(this.pos, this.tonguePos);
             const distance = dist(this.tonguePos, this.pos);
@@ -167,8 +173,6 @@ class Frog {
 
             return;
         }
-
-        const strategy = this.strategy(items);
 
         if (strategy.id === 'EAT') {
             this.target = strategy.target;

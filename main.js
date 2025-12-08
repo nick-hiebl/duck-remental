@@ -1,6 +1,6 @@
 const Game = () => {
     const gameState = {
-        unspentPoints: 1000,
+        unspentPoints: 0,
         newFoodValue: 1,
         foodRate: 2.4,
         foodClusterSize: 1,
@@ -9,8 +9,7 @@ const Game = () => {
         creatures: [],
     };
 
-    // gameState.creatures.push(new Duck(100, 300, gameState));
-    gameState.creatures.push(new Frog(100, 300, gameState));
+    gameState.creatures.push(new Duck(100, 300, gameState));
 
     window.gameState = gameState;
 
@@ -248,6 +247,23 @@ const GAME_UPGRADES = [
             cost,
             upgrade: config => {
                 config.gameState.creatures.push(new Crab(400, 300, config.gameState));
+            },
+        })),
+    [
+        { cost: 70 },
+        { cost: 700 },
+        { cost: 7000 },
+        { cost: 70000 },
+        { cost: 700000 },
+        { cost: 7000000 },
+        { cost: 70000000 },
+        { cost: 700000000 },
+    ]
+        .map(({ cost }) => ({
+            text: 'A frog',
+            cost,
+            upgrade: config => {
+                config.gameState.creatures.push(new Frog(400, 300, config.gameState));
             },
         })),
 ];
