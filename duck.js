@@ -145,7 +145,10 @@ class Duck {
 
         let closestItem;
 
-        if (items.includes(this.target)) {
+        if (this.target && this.target.eaten && this.timeSinceEating > MAX_FRAME_DUR / 1000) {
+            // Someone else ate my food, rage-quit
+            closestItem = chooseRandom(items);
+        } else if (items.includes(this.target)) {
             closestItem = this.target;
         } else if (items.length === 1) {
             closestItem = items[0];
@@ -271,7 +274,7 @@ class DuckConfig {
         this.accelRate = ACCEL_RATE;
         this.speed = SPEED;
 
-        this.turningRate = 1.8;
+        this.turningRate = 2.1;
 
         this.eatingCooldown = 2;
 
@@ -305,12 +308,12 @@ class DuckConfig {
 
 const DUCK_UPGRADES = [
     [
-        { cost: 1, speed: 130, accel: 150, decel: 480, turning: 2.2 },
-        { cost: 10, speed: 170, accel: 190, decel: 600, turning: 3 },
-        { cost: 50, speed: 250, accel: 280, decel: 720, turning: 4.5 },
-        { cost: 250, speed: 400, accel: 400, decel: 900, turning: 6 },
-        { cost: 1000, speed: 550, accel: 800, decel: 1200, turning: 8 },
-        { cost: 2500, speed: 720, accel: 1000, decel: 1800, turning: 10 },
+        { cost: 1, speed: 130, accel: 150, decel: 480, turning: 2.5 },
+        { cost: 10, speed: 170, accel: 190, decel: 600, turning: 3.5 },
+        { cost: 50, speed: 250, accel: 280, decel: 720, turning: 5 },
+        { cost: 250, speed: 400, accel: 400, decel: 900, turning: 6.5 },
+        { cost: 1000, speed: 550, accel: 800, decel: 1200, turning: 9 },
+        { cost: 2500, speed: 720, accel: 1000, decel: 1800, turning: 11 },
     ]
         .map(({ cost, speed, accel, decel, turning }) => ({
             text: 'Faster',
