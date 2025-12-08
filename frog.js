@@ -80,6 +80,8 @@ class Frog {
         v_circle(ctx, v_sub(eyeCenter, eyeOff), this.config.size * 0.2);
 
         ctx.restore();
+
+        this.config.draw();
     }
 
     strategy(items) {
