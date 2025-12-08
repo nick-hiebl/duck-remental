@@ -1,6 +1,6 @@
 const Game = () => {
     const gameState = {
-        unspentPoints: 0,
+        unspentPoints: 1000,
         newFoodValue: 1,
         foodRate: 2.4,
         foodClusterSize: 1,
@@ -9,7 +9,8 @@ const Game = () => {
         creatures: [],
     };
 
-    gameState.creatures.push(new Duck(100, 300, gameState));
+    // gameState.creatures.push(new Duck(100, 300, gameState));
+    gameState.creatures.push(new Frog(100, 300, gameState));
 
     window.gameState = gameState;
 
