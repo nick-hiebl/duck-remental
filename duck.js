@@ -27,9 +27,7 @@ class Duck {
 
         this.target = null;
 
-        this.hovered = false;
-
-        this.config = new DuckConfig(this, gameState);
+        this.config = DuckConfig.get(gameState);
 
         this.heading = { x: 1, y: 0 };
         this.beakOffset = this.getBeakOffset();
@@ -54,14 +52,6 @@ class Duck {
     }
 
     draw(ctx) {
-        if (this.hovered) {
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = '#f00';
-            ctx.beginPath();
-            ctx.ellipse(this.x, this.y, this.config.size * 1.5, this.config.size * 1.5, 0, 0, 2 * Math.PI);
-            ctx.stroke();
-        }
-
         const heading = Math.atan2(this.heading.y, this.heading.x);
 
         ctx.fillStyle = 'brown';
@@ -258,11 +248,20 @@ class Duck {
 }
 
 class DuckConfig {
-    static instances = 0;
+    static instance = null;
 
-    constructor(parent, gameState) {
-        this.id = ++DuckConfig.instances;
-        this.parent = parent;
+    static get(gameState) {
+        if (DuckConfig.instance) {
+            return DuckConfig.instance;
+        }
+
+        const i = new DuckConfig(gameState);
+        DuckConfig.instance = i;
+
+        return i;
+    }
+
+    constructor(gameState) {
         this.gameState = gameState;
 
         this.eatDist = EAT_DIST;
@@ -280,7 +279,7 @@ class DuckConfig {
 
         const box = document.getElementById('controls');
 
-        const title = createElement('strong', { text: `Duck ${this.id}` });
+        const title = createElement('strong', { text: 'Duck' });
 
         this.upgrades = DUCK_UPGRADES.map(list => {
             return new Upgrade(list, this);
@@ -289,13 +288,6 @@ class DuckConfig {
         const myDiv = createElement('div', {
             classList: ['creature-control-box'],
             children: [title, ...this.upgrades.map(u => u.button)],
-        });
-
-        myDiv.addEventListener('mouseenter', () => {
-            this.parent.hovered = true;
-        });
-        myDiv.addEventListener('mouseleave', () => {
-            this.parent.hovered = false;
         });
 
         box.appendChild(myDiv);
@@ -310,10 +302,10 @@ const DUCK_UPGRADES = [
     [
         { cost: 1, speed: 130, accel: 150, decel: 480, turning: 2.5 },
         { cost: 10, speed: 170, accel: 190, decel: 600, turning: 3.5 },
-        { cost: 50, speed: 250, accel: 280, decel: 720, turning: 5 },
-        { cost: 250, speed: 400, accel: 400, decel: 900, turning: 6.5 },
-        { cost: 1000, speed: 550, accel: 800, decel: 1200, turning: 9 },
-        { cost: 2500, speed: 720, accel: 1000, decel: 1800, turning: 11 },
+        { cost: 100, speed: 250, accel: 280, decel: 720, turning: 5 },
+        { cost: 500, speed: 400, accel: 400, decel: 900, turning: 6.5 },
+        { cost: 2000, speed: 550, accel: 800, decel: 1200, turning: 9 },
+        { cost: 5000, speed: 720, accel: 1000, decel: 1800, turning: 11 },
     ]
         .map(({ cost, speed, accel, decel, turning }) => ({
             text: 'Faster',
@@ -328,11 +320,11 @@ const DUCK_UPGRADES = [
     [
         { cost: 1, value: 1.6 },
         { cost: 10, value: 1.3 },
-        { cost: 50, value: 1.0 },
-        { cost: 250, value: 0.75 },
-        { cost: 1000, value: 0.4 },
-        { cost: 2500, value: 0.3 },
-        { cost: 8000, value: 0.22 },
+        { cost: 100, value: 1.0 },
+        { cost: 500, value: 0.75 },
+        { cost: 2000, value: 0.4 },
+        { cost: 5000, value: 0.3 },
+        { cost: 20000, value: 0.22 },
     ]
         .map(({ cost, value }) => ({
             text: 'Eat faster',
@@ -344,10 +336,10 @@ const DUCK_UPGRADES = [
     [
         { cost: 1, value: 24 },
         { cost: 10, value: 27 },
-        { cost: 50, value: 30 },
-        { cost: 250, value: 33 },
-        { cost: 1000, value: 36 },
-        { cost: 3000, value: 40 },
+        { cost: 100, value: 30 },
+        { cost: 1000, value: 33 },
+        { cost: 10000, value: 36 },
+        { cost: 100000, value: 40 },
     ]
         .map(({ cost, value }) => ({
             text: 'Size',

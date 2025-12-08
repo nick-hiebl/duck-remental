@@ -19,9 +19,7 @@ class Crab {
 
         this.target = null;
 
-        this.hovered = false;
-
-        this.config = new CrabConfig(this, gameState);
+        this.config = CrabConfig.get(gameState);
 
         this.heading = { x: 1, y: 0 };
 
@@ -61,14 +59,6 @@ class Crab {
             v_circle(ctx, pos, 2);
             v_line(ctx, pos, this.visualLegEnds[index]);
         });
-
-        if (this.hovered) {
-            ctx.strokeStyle = 'red';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.ellipse(this.x, this.y, this.config.size * 1.5, this.config.size * 3, heading, 0, 2 * Math.PI);
-            ctx.stroke();
-        }
 
         ctx.lineCap = 'butt';
 
@@ -469,11 +459,20 @@ const CRAB_RADIUS = 7;
 const CRAB_EAT_DIST = 12;
 
 class CrabConfig {
-    static instances = 0;
+    static instance = null;
 
-    constructor(parent, gameState) {
-        this.id = ++CrabConfig.instances;
-        this.parent = parent;
+    static get(gameState) {
+        if (CrabConfig.instance) {
+            return CrabConfig.instance;
+        }
+
+        const i = new CrabConfig(gameState);
+        CrabConfig.instance = i;
+
+        return i;
+    }
+
+    constructor(gameState) {
         this.gameState = gameState;
 
         this.eatDist = CRAB_EAT_DIST;
@@ -490,7 +489,7 @@ class CrabConfig {
 
         const box = document.getElementById('controls');
 
-        const title = createElement('strong', { text: `Crab ${this.id}` });
+        const title = createElement('strong', { text: 'Crab' });
 
         this.upgrades = CRAB_UPGRADES.map(list => {
             return new Upgrade(list, this);
@@ -499,13 +498,6 @@ class CrabConfig {
         const myDiv = createElement('div', {
             classList: ['creature-control-box'],
             children: [title, ...this.upgrades.map(u => u.button)],
-        });
-
-        myDiv.addEventListener('mouseenter', () => {
-            this.parent.hovered = true;
-        });
-        myDiv.addEventListener('mouseleave', () => {
-            this.parent.hovered = false;
         });
 
         box.appendChild(myDiv);
@@ -520,10 +512,10 @@ const CRAB_UPGRADES = [
     [
         { cost: 1, speed: 130, accel: 150, decel: 480, turning: 1.3 },
         { cost: 10, speed: 160, accel: 190, decel: 600, turning: 1.6 },
-        { cost: 50, speed: 200, accel: 280, decel: 720, turning: 1.9 },
-        { cost: 250, speed: 250, accel: 400, decel: 900, turning: 2.2 },
-        { cost: 1000, speed: 310, accel: 800, decel: 1200, turning: 2.5 },
-        { cost: 2500, speed: 380, accel: 1000, decel: 1800, turning: 3 },
+        { cost: 100, speed: 200, accel: 280, decel: 720, turning: 1.9 },
+        { cost: 500, speed: 250, accel: 400, decel: 900, turning: 2.2 },
+        { cost: 2000, speed: 310, accel: 800, decel: 1200, turning: 2.5 },
+        { cost: 5000, speed: 380, accel: 1000, decel: 1800, turning: 3 },
     ]
         .map(({ cost, speed, accel, decel, turning }) => ({
             text: 'Faster',
@@ -538,11 +530,11 @@ const CRAB_UPGRADES = [
     [
         { cost: 1, value: 1.6 },
         { cost: 10, value: 1.3 },
-        { cost: 50, value: 1.0 },
-        { cost: 250, value: 0.75 },
-        { cost: 1000, value: 0.4 },
-        { cost: 2500, value: 0.3 },
-        { cost: 8000, value: 0.22 },
+        { cost: 100, value: 1.0 },
+        { cost: 500, value: 0.75 },
+        { cost: 2000, value: 0.4 },
+        { cost: 5000, value: 0.3 },
+        { cost: 20000, value: 0.22 },
     ]
         .map(({ cost, value }) => ({
             text: 'Eat faster',
@@ -554,10 +546,10 @@ const CRAB_UPGRADES = [
     [
         { cost: 1, value: 15 },
         { cost: 10, value: 17 },
-        { cost: 50, value: 19 },
-        { cost: 250, value: 21 },
-        { cost: 1000, value: 23 },
-        { cost: 3000, value: 25 },
+        { cost: 100, value: 19 },
+        { cost: 1000, value: 21 },
+        { cost: 10000, value: 23 },
+        { cost: 100000, value: 25 },
     ]
         .map(({ cost, value }) => ({
             text: 'Size',
