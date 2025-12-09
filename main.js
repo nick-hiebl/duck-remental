@@ -268,4 +268,21 @@ const GAME_UPGRADES = [
                 config.gameState.creatures.push(new Frog(400, 300, config.gameState));
             },
         })),
+    [
+        { cost: 50 },
+        { cost: 500 },
+        { cost: 5000 },
+        { cost: 50000 },
+        { cost: 500000 },
+        { cost: 5000000 },
+        { cost: 50000000 },
+        { cost: 500000000 },
+    ]
+        .map(({ cost }) => ({
+            text: 'A gecko',
+            cost,
+            upgrade: config => {
+                config.gameState.creatures.push(new Gecko(400, 300, config.gameState));
+            },
+        })),
 ];

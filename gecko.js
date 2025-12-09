@@ -18,7 +18,36 @@ class Gecko {
         this.heading = { x: 1, y: 0 };
         this.distanceTravelled = 0;
 
-        this.mainColor = `hsla(${randInt(0, 360)}, ${randInt(80, 100)}%, ${randInt(60, 80)}%, 1.00)`;
+        this.mainColor = `hsla(${randInt(320, 480)}, ${randInt(80, 100)}%, ${randInt(60, 80)}%, 1.00)`;
+
+        const SEG_LENGTHS = [7, 9, 12, 10, 8, 6, 5, 5, 4, 4, 3, 3, 2, 1];
+
+        const ARMS = [9, 6];
+
+        let runningX = x;
+
+        this.segments = [];
+
+        for (const seg of SEG_LENGTHS) {
+            runningX -= seg * .8;
+
+            const segment = {
+                pos: { x: runningX, y },
+                length: seg * .8,
+                radius: seg,
+            };
+
+            if (ARMS.includes(seg)) {
+                const ARM_LENGTH = 16;
+                segment.armLength = ARM_LENGTH;
+                segment.arms = [
+                    { grounded: { x: runningX, y: y - ARM_LENGTH }, actual: { x: runningX, y: y - ARM_LENGTH } },
+                    { grounded: { x: runningX, y: y + ARM_LENGTH }, actual: { x: runningX, y: y + ARM_LENGTH } },
+                ];
+            }
+
+            this.segments.push(segment);
+        }
     }
 
     get pos() {
@@ -43,10 +72,22 @@ class Gecko {
         const heading = Math.atan2(this.heading.y, this.heading.x);
 
         ctx.fillStyle = this.mainColor;
-        ctx.beginPath();
-        ctx.ellipse(this.x, this.y, this.config.size, this.config.size, heading, 0, 2 * Math.PI);
-        ctx.fill();
+        ctx.strokeStyle = this.mainColor;
 
+        ctx.lineWidth = this.config.size * 0.45;
+        ctx.lineCap = 'round';
+
+        this.segments.forEach(segment => {
+            v_circle(ctx, segment.pos, segment.radius);
+
+            if (segment.arms) {
+                segment.arms.forEach(({ actual }) => {
+                    v_line(ctx, segment.pos, actual);
+                });
+            }
+        });
+
+        v_circle(ctx, this, this.config.size);
 
         ctx.fillStyle = 'black';
         ctx.beginPath();
@@ -59,18 +100,6 @@ class Gecko {
         const eye2Pos = v_add(this.pos, v_scale({ x: Math.cos(eye2Angle), y: Math.sin(eye2Angle) }, eyeOffsetRadius));
         ctx.ellipse(eye2Pos.x, eye2Pos.y, eyeRadius, eyeRadius, 0, 0, 2 * Math.PI);
         ctx.fill();
-
-        // if (this.target) {
-        //     ctx.strokeStyle = 'yellow';
-        //     ctx.beginPath();
-        //     ctx.ellipse(this.target.x, this.target.y, 12, 12, 0, 0, 2 * Math.PI);
-        //     ctx.stroke();
-
-        //     ctx.beginPath();
-        //     ctx.moveTo(this.x, this.y);
-        //     ctx.lineTo(this.x + this.heading.x * 100, this.y + this.heading.y * 100);
-        //     ctx.stroke();
-        // }
 
         this.config.draw();
     }
@@ -146,9 +175,9 @@ class Gecko {
 
             const currentHeading = v_angle(this.heading);
 
-            const angleWobble = Math.sin(this.distanceTravelled / 8);
+            const angleWobble = Math.sin(this.distanceTravelled / 12);
 
-            if (relative_angle(currentHeading, offsetAngle) < angleWobble / 2) {
+            if (relative_angle(currentHeading, offsetAngle) < angleWobble / 1) {
                 this.heading = v_for_angle(currentHeading - this.config.turningRate * deltaTime);
             } else {
                 this.heading = v_for_angle(currentHeading + this.config.turningRate * deltaTime);
@@ -179,10 +208,43 @@ class Gecko {
         }
 
         if (isNaN(this.pos.x) || isNaN(this.pos.y)) {
-            console.log(this.vel, deltaTime);
+            throw new Error('Invalid position');
         }
 
-        // this.beakOffset = v_add(v_scale(this.beakOffset, 0.9), v_scale(this.getBeakOffset(), 0.1));
+        let priorPos = this.pos;
+        for (let i = 0; i < this.segments.length; i++) {
+            const segment = this.segments[i];
+            const segmentV = v_sub(segment.pos, priorPos);
+
+            segment.pos = v_add(priorPos, v_cap_magnitude(segmentV, segment.length));
+
+            if (segment.arms) {
+                const legV = v_set_magnitude(v_right_angle(segmentV), segment.armLength);
+                const leftIdealPos = v_add(segment.pos, legV, v_scale(segmentV, -2));
+                const rightIdealPos = v_add(segment.pos, v_scale(legV, -1), v_scale(segmentV, -2));
+
+                const leftArm = segment.arms[0];
+
+                const LEG_STEP = 20;
+
+                if (dist(leftArm.grounded, leftIdealPos) > LEG_STEP) {
+                    // leftArm.grounded = v_add(leftArm.grounded, v_set_magnitude(v_sub(leftIdealPos, leftArm.grounded), LEG_STEP * 1.8))
+                    leftArm.grounded = leftIdealPos;
+                }
+
+                const rightArm = segment.arms[1];
+
+                if (dist(rightArm.grounded, rightIdealPos) > LEG_STEP) {
+                    // rightArm.grounded = v_add(rightArm.grounded, v_set_magnitude(v_sub(rightIdealPos, rightArm.grounded), LEG_STEP * 1.8))
+                    rightArm.grounded = rightIdealPos;
+                }
+
+                leftArm.actual = v_lerp(leftArm.actual, leftArm.grounded, 0.1);
+                rightArm.actual = v_lerp(rightArm.actual, rightArm.grounded, 0.1);
+            }
+
+            priorPos = segment.pos;
+        }
     }
 }
 
