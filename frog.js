@@ -333,6 +333,8 @@ const FROG_UPGRADES = [
         { cost: 25, speed: 100, gravity: -140, cd: 0.15 },
         { cost: 100, speed: 135, gravity: -160, cd: 0.1 },
         { cost: 250, speed: 160, gravity: -190, cd: 0.085 },
+        { cost: 1000, speed: 190, gravity: -200, cd: 0.08 },
+        { cost: 2500, speed: 210, gravity: -210, cd: 0.07 },
     ]
         .map(({ cost, speed, gravity, cd }) => ({
             text: 'Move faster',
