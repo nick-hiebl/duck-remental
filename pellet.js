@@ -35,6 +35,8 @@ class Pellet {
             6: '#fb3',
             8: '#f88',
             10: '#6f8',
+            12: '#d4e',
+            16: '#61d',
         }[this.foodValue];
 
         const FALL_TIME = 1;

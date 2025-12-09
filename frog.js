@@ -27,6 +27,8 @@ class Frog {
         this.target = null;
 
         this.config = FrogConfig.get(gameState);
+
+        this.color = `hsla(${randInt(110, 140)}, ${randInt(50, 90)}%, ${randInt(20, 50)}%, 1.00)`;
     }
 
     get pos() {
@@ -68,7 +70,7 @@ class Frog {
 
         const heading = v_angle(this.heading);
 
-        ctx.fillStyle = 'green';
+        ctx.fillStyle = this.color;
         ctx.beginPath();
         ctx.ellipse(this.x, this.y, this.config.size, this.config.size * 1.2, heading, 0, 2 * Math.PI);
         ctx.fill();

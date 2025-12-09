@@ -10,3 +10,7 @@ const bestNItems = (list, maxItems) => {
 const chooseRandom = list => {
     return list[Math.floor(Math.random() * list.length)];
 };
+
+const randInt = (low, high) => {
+    return Math.floor(Math.random() * (high - low) + low);
+};

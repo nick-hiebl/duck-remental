@@ -28,6 +28,12 @@ class Crab {
 
         this.actualLegEnds = this.getIdealLegEnds();
         this.visualLegEnds = [...this.actualLegEnds];
+
+        const hue = randInt(0, 360);
+        const saturation = randInt(70, 90);
+        const lightness = randInt(40, 65);
+        this.mainColor = `hsla(${hue}, ${saturation}%, ${lightness}%, 1.00)`;
+        this.legColor = `hsla(${hue}, ${saturation}%, ${lightness - 10}%, 1.00)`;
     }
 
     get pos() {
@@ -52,7 +58,7 @@ class Crab {
         const heading = Math.atan2(this.heading.y, this.heading.x);
 
         ctx.lineWidth = this.config.size * 0.35;
-        ctx.strokeStyle = 'darkorange';
+        ctx.strokeStyle = this.legColor;
         ctx.lineCap = 'round';
         const legBases = this.getLegBases();
         legBases.forEach((pos, index) => {
@@ -62,13 +68,13 @@ class Crab {
 
         ctx.lineCap = 'butt';
 
-        ctx.fillStyle = 'orange';
+        ctx.fillStyle = this.mainColor;
+        ctx.strokeStyle = this.mainColor;
         ctx.beginPath();
         ctx.ellipse(this.x, this.y, this.config.size, this.config.size * 2, heading, 0, 2 * Math.PI);
         ctx.fill();
 
         ctx.lineWidth = this.config.size * 0.4;
-        ctx.strokeStyle = 'orange';
         const leftShoulder = v_add(this.pos, v_scale(v_for_angle(heading - Math.PI / 2), this.config.size * 1.9));
         ctx.beginPath();
         ctx.moveTo(leftShoulder.x, leftShoulder.y);

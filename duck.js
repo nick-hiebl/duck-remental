@@ -31,6 +31,10 @@ class Duck {
 
         this.heading = { x: 1, y: 0 };
         this.beakOffset = this.getBeakOffset();
+
+        this.beakColor = `hsla(${randInt(42, 62)}, ${randInt(80, 100)}%, ${randInt(60, 80)}%, 1.00)`;
+        this.headColor = `hsla(${randInt(92, 210)}, ${randInt(40, 80)}%, ${randInt(25, 48)}%, 1.00)`;
+        this.bodyColor = `hsla(${randInt(10, 40)}, ${randInt(45, 70)}%, ${randInt(15, 30)}%, 1.00)`
     }
 
     get pos() {
@@ -54,7 +58,7 @@ class Duck {
     draw(ctx) {
         const heading = Math.atan2(this.heading.y, this.heading.x);
 
-        ctx.fillStyle = 'brown';
+        ctx.fillStyle = this.bodyColor;
         ctx.beginPath();
         ctx.ellipse(this.x, this.y, this.config.size * 1.2, this.config.size, heading, 0, 2 * Math.PI);
         ctx.fill();
@@ -64,12 +68,12 @@ class Duck {
 
         const beakHeading = Math.atan2(beakPosition.y - headPosition.y, beakPosition.x - headPosition.x);
 
-        ctx.fillStyle = 'yellow';
+        ctx.fillStyle = this.beakColor;
         ctx.beginPath();
         ctx.ellipse(beakPosition.x, beakPosition.y, this.config.headSize, this.config.headSize * 0.5, beakHeading, 0, 2 * Math.PI)
         ctx.fill();
 
-        ctx.fillStyle = 'green';
+        ctx.fillStyle = this.headColor;
         ctx.beginPath();
         ctx.ellipse(headPosition.x, headPosition.y, this.config.headSize, this.config.headSize, 0, 0, 2 * Math.PI);
         ctx.fill();
