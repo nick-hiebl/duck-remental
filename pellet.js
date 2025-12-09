@@ -8,6 +8,7 @@ class Pellet {
         this.eaten = false;
 
         this.foodValue = gameState.newFoodValue ?? 1;
+        this.gameState = gameState;
 
         this.age = Math.random() * -0.2;
     }
@@ -26,7 +27,7 @@ class Pellet {
     }
 
     draw(ctx) {
-        const primaryColor = {
+        let primaryColor = {
             1: 'black',
             2: 'gold',
             3: 'darkgreen',
@@ -38,6 +39,11 @@ class Pellet {
             12: '#d4e',
             16: '#61d',
         }[this.foodValue];
+
+        if (this.foodValue === 16) {
+            const pos = this.x * 3 + this.y + this.gameState.timePassed * 120;
+            primaryColor = `hsl(${pos / 10}, 90%, 50%)`;
+        }
 
         const FALL_TIME = 1;
         if (this.age < 0) {

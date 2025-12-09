@@ -282,9 +282,11 @@ class FrogConfig {
 const FROG_UPGRADES = [
     [
         { cost: 1, size: 12 },
-        { cost: 1, size: 15 },
-        { cost: 1, size: 18 },
-        { cost: 1, size: 21 },
+        { cost: 10, size: 14 },
+        { cost: 100, size: 16 },
+        { cost: 1000, size: 18 },
+        { cost: 10000, size: 20 },
+        { cost: 100000, size: 22 },
     ]
         .map(({ cost, size }) => ({
             text: 'Bigger',
@@ -297,9 +299,10 @@ const FROG_UPGRADES = [
         })),
     [
         { cost: 1, speed: 15 },
-        { cost: 1, speed: 21 },
-        { cost: 1, speed: 27 },
-        { cost: 1, speed: 33 },
+        { cost: 10, speed: 21 },
+        { cost: 50, speed: 27 },
+        { cost: 100, speed: 33 },
+        { cost: 250, speed: 40 },
     ]
         .map(({ cost, speed }) => ({
             text: 'Faster tongue',
@@ -310,12 +313,12 @@ const FROG_UPGRADES = [
         })),
     [
         { cost: 1, value: 1.6 },
-        { cost: 1, value: 1.3 },
-        { cost: 1, value: 1.0 },
-        { cost: 1, value: 0.75 },
-        { cost: 1, value: 0.4 },
-        { cost: 1, value: 0.3 },
-        { cost: 1, value: 0.22 },
+        { cost: 10, value: 1.3 },
+        { cost: 50, value: 1.0 },
+        { cost: 250, value: 0.75 },
+        { cost: 1000, value: 0.4 },
+        { cost: 5000, value: 0.3 },
+        { cost: 25000, value: 0.22 },
     ]
         .map(({ cost, value }) => ({
             text: 'Eat faster',
@@ -326,9 +329,10 @@ const FROG_UPGRADES = [
         })),
     [
         { cost: 1, speed: 65, gravity: -110, cd: 0.25 },
-        { cost: 1, speed: 80, gravity: -130, cd: 0.20 },
-        { cost: 1, speed: 100, gravity: -140, cd: 0.15 },
-        { cost: 1, speed: 135, gravity: -160, cd: 0.1 },
+        { cost: 10, speed: 80, gravity: -130, cd: 0.20 },
+        { cost: 25, speed: 100, gravity: -140, cd: 0.15 },
+        { cost: 100, speed: 135, gravity: -160, cd: 0.1 },
+        { cost: 250, speed: 160, gravity: -190, cd: 0.085 },
     ]
         .map(({ cost, speed, gravity, cd }) => ({
             text: 'Move faster',

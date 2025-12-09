@@ -7,6 +7,7 @@ const Game = () => {
         multiClusterBase: 0,
         maxFood: 50,
         creatures: [],
+        timePassed: 0,
     };
 
     gameState.creatures.push(new Duck(100, 300, gameState));
@@ -60,6 +61,7 @@ const Game = () => {
     };
 
     const update = deltaTime => {
+        gameState.timePassed += deltaTime;
         gameState.creatures.sort((a, b) => {
             return a.config.size - b.config.size;
         });
