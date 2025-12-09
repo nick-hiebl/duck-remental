@@ -210,7 +210,7 @@ class GeckoConfig {
         this.decelRate = 360;
         this.maxEatingSpeed = MAX_EATING_SPEED;
         this.accelRate = ACCEL_RATE;
-        this.speed = SPEED;
+        this.speed = 100;
 
         this.turningRate = 3;
 
@@ -218,9 +218,9 @@ class GeckoConfig {
 
         const box = document.getElementById('controls');
 
-        const title = createElement('strong', { text: 'Duck' });
+        const title = createElement('strong', { text: 'Gecko' });
 
-        this.upgrades = DUCK_UPGRADES.map(list => {
+        this.upgrades = GECKO_UPGRADES.map(list => {
             return new Upgrade(list, this);
         });
 
@@ -253,7 +253,8 @@ const GECKO_UPGRADES = [
                 config.speed = speed;
                 config.accelRate = accel;
                 config.decelRate = decel;
-                config.turningRate = turning;
+                config.turningRate = speed * 0.03;
+                config.slowDist = speed * 0.3;
             },
         })),
     [
