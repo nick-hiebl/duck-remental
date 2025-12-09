@@ -38,7 +38,7 @@ class Gecko {
             };
 
             if (ARMS.includes(seg)) {
-                const ARM_LENGTH = 16;
+                const ARM_LENGTH = seg === 9 ? 15 : 17;
                 segment.armLength = ARM_LENGTH;
                 segment.arms = [
                     { grounded: { x: runningX, y: y - ARM_LENGTH }, actual: { x: runningX, y: y - ARM_LENGTH } },
@@ -77,12 +77,24 @@ class Gecko {
         ctx.lineWidth = this.config.size * 0.45;
         ctx.lineCap = 'round';
 
-        this.segments.forEach(segment => {
+        this.segments.forEach((segment, segmentIndex) => {
             v_circle(ctx, segment.pos, segment.radius);
 
             if (segment.arms) {
-                segment.arms.forEach(({ actual }) => {
-                    v_line(ctx, segment.pos, actual);
+                segment.arms.forEach(({ actual }, index) => {
+                    const armV = v_sub(actual, segment.pos);
+                    const armDirection = (index === 0 ? -0.2 : 0.2) * (segmentIndex < 3 ? 1 : -1);
+
+                    const midpoint = v_add(
+                        v_lerp(actual, segment.pos, 0.33),
+                        v_set_magnitude(
+                            v_right_angle(armV),
+                            v_mag(armV) * armDirection,
+                        ),
+                    );
+
+                    v_line(ctx, segment.pos, midpoint);
+                    v_line(ctx, midpoint, actual);
                 });
             }
         });
@@ -185,7 +197,7 @@ class Gecko {
 
             const currentVelocity = v_mag(this.vel);
 
-            const targetVelocity = v_mag(offset) < this.config.slowDist ? this.config.speed / 3 : this.config.speed;
+            const targetVelocity = v_mag(offset) < this.config.slowDist ? this.config.speed / 4 : this.config.speed;
 
             const nextVelocity = approach(
                 currentVelocity,
@@ -220,14 +232,15 @@ class Gecko {
 
             if (segment.arms) {
                 const legV = v_set_magnitude(v_right_angle(segmentV), segment.armLength);
-                const leftIdealPos = v_add(segment.pos, legV, v_scale(segmentV, -2));
-                const rightIdealPos = v_add(segment.pos, v_scale(legV, -1), v_scale(segmentV, -2));
+                const leftIdealPos = v_add(segment.pos, legV, v_set_magnitude(segmentV, -segment.armLength * 1.3));
+                const rightIdealPos = v_add(segment.pos, v_scale(legV, -1), v_set_magnitude(segmentV, -segment.armLength * 1.3));
 
                 const leftArm = segment.arms[0];
 
-                const LEG_STEP = 20;
+                const LEG_STEP = 30;
 
                 if (dist(leftArm.grounded, leftIdealPos) > LEG_STEP) {
+                    leftArm.actual = leftArm.grounded;
                     // leftArm.grounded = v_add(leftArm.grounded, v_set_magnitude(v_sub(leftIdealPos, leftArm.grounded), LEG_STEP * 1.8))
                     leftArm.grounded = leftIdealPos;
                 }
@@ -235,6 +248,7 @@ class Gecko {
                 const rightArm = segment.arms[1];
 
                 if (dist(rightArm.grounded, rightIdealPos) > LEG_STEP) {
+                    rightArm.actual = rightArm.grounded;
                     // rightArm.grounded = v_add(rightArm.grounded, v_set_magnitude(v_sub(rightIdealPos, rightArm.grounded), LEG_STEP * 1.8))
                     rightArm.grounded = rightIdealPos;
                 }
@@ -301,21 +315,21 @@ class GeckoConfig {
 
 const GECKO_UPGRADES = [
     [
-        { cost: 1, speed: 130, accel: 150, decel: 480, turning: 2.5 },
-        { cost: 10, speed: 170, accel: 190, decel: 600, turning: 3.5 },
-        { cost: 100, speed: 250, accel: 280, decel: 720, turning: 5 },
-        { cost: 500, speed: 400, accel: 400, decel: 900, turning: 6.5 },
-        { cost: 2000, speed: 550, accel: 800, decel: 1200, turning: 9 },
-        { cost: 5000, speed: 720, accel: 1000, decel: 1800, turning: 11 },
+        { cost: 1, speed: 130, accel: 150, decel: 480 },
+        { cost: 10, speed: 170, accel: 190, decel: 600 },
+        { cost: 100, speed: 250, accel: 280, decel: 720 },
+        { cost: 500, speed: 400, accel: 400, decel: 900 },
+        { cost: 2000, speed: 550, accel: 800, decel: 1200 },
+        { cost: 5000, speed: 720, accel: 1000, decel: 1800 },
     ]
-        .map(({ cost, speed, accel, decel, turning }) => ({
+        .map(({ cost, speed, accel, decel }) => ({
             text: 'Faster',
             cost,
             upgrade: config => {
                 config.speed = speed;
                 config.accelRate = accel;
                 config.decelRate = decel;
-                config.turningRate = speed * 0.03;
+                config.turningRate = speed * 0.04;
                 config.slowDist = speed * 0.3;
             },
         })),
