@@ -18,7 +18,10 @@ class Gecko {
         this.heading = { x: 1, y: 0 };
         this.distanceTravelled = 0;
 
-        this.mainColor = `hsla(${randInt(320, 480)}, ${randInt(80, 100)}%, ${randInt(60, 80)}%, 1.00)`;
+        const hue = randInt(320, 480);
+        const saturation = randInt(80, 100);
+        const lightness = randInt(60, 80);
+        this.mainColor = `hsla(${hue}, ${saturation}%, ${lightness}%, 1.00)`;
 
         const SEG_LENGTHS = [7, 9, 12, 10, 8, 6, 5, 5, 4, 4, 3, 3, 2, 1];
 
@@ -28,13 +31,16 @@ class Gecko {
 
         this.segments = [];
 
+        let i = 0;
         for (const seg of SEG_LENGTHS) {
+            i += 1;
             runningX -= seg * .8;
 
             const segment = {
                 pos: { x: runningX, y },
                 length: seg * .8,
                 radius: seg,
+                color: `hsla(${hue + i * 5}, ${saturation}%, ${lightness}%, 1.00)`,
             };
 
             if (ARMS.includes(seg)) {
@@ -77,13 +83,18 @@ class Gecko {
         ctx.lineWidth = this.config.size * 0.45;
         ctx.lineCap = 'round';
 
-        this.segments.forEach((segment, segmentIndex) => {
+        this.segments.forEach((_, segmentIndex) => {
+            const segment = this.segments[this.segments.length - segmentIndex - 1];
+
+            ctx.fillStyle = segment.color;
+            ctx.strokeStyle = segment.color;
+
             v_circle(ctx, segment.pos, segment.radius);
 
             if (segment.arms) {
                 segment.arms.forEach(({ actual }, index) => {
                     const armV = v_sub(actual, segment.pos);
-                    const armDirection = (index === 0 ? -0.2 : 0.2) * (segmentIndex < 3 ? 1 : -1);
+                    const armDirection = (index === 0 ? -0.2 : 0.2) * (segmentIndex > 8 ? 1 : -1);
 
                     const midpoint = v_add(
                         v_lerp(actual, segment.pos, 0.33),

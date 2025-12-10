@@ -30,3 +30,7 @@ canvas {
     flex-direction: row;
     flex-wrap: wrap;
 }
+
+div[data-hidden=true] {
+    display: none;
+}

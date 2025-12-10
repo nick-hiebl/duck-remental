@@ -1,6 +1,48 @@
+function scenes(sceneKey) {
+    const clearControls = () => {
+        document.getElementById('info').dataset.hidden = true;
+        document.getElementById('controls').dataset.hidden = true;
+    };
+
+    if (sceneKey === 'gecko') {
+        clearControls();
+        const gameState = {
+            unspentPoints: 0,
+            newFoodValue: 16,
+            foodRate: 0.6,
+            foodClusterSize: 25,
+            multiClusterBase: 2,
+            maxFood: 500,
+            creatures: [],
+            timePassed: 0,
+            width: 800,
+            height: 600,
+        };
+
+        gameState.creatures.push(new Gecko(200, 200, gameState));
+        gameState.creatures.push(new Gecko(600, 200, gameState));
+        gameState.creatures.push(new Gecko(200, 400, gameState));
+        gameState.creatures.push(new Gecko(600, 400, gameState));
+
+        const firstGecko = gameState.creatures[0];
+
+        GECKO_UPGRADES.find(list => list[0].text === 'Faster')[3].upgrade(firstGecko.config);
+        GECKO_UPGRADES.find(list => list[0].text === 'Eat faster')[6].upgrade(firstGecko.config);
+
+
+        return gameState;
+    }
+}
+
 const Game = () => {
-    const gameState = {
-        unspentPoints: 0,
+    const search = new URLSearchParams(location.search);
+
+    const sceneKey = search.get('scene');
+
+    const gameStateFromScene = scenes(sceneKey);
+
+    const gameState = gameStateFromScene ?? {
+        unspentPoints: 1000000,
         newFoodValue: 1,
         foodRate: 2.4,
         foodClusterSize: 1,
@@ -8,13 +50,11 @@ const Game = () => {
         maxFood: 50,
         creatures: [],
         timePassed: 0,
+        width: 800,
+        height: 600,
     };
 
-    gameState.creatures.push(new Duck(100, 300, gameState));
-
     window.gameState = gameState;
-
-    const main = document.getElementById('info');
 
     const gameControlBox = document.getElementById('game-controls');
 
@@ -42,8 +82,12 @@ const Game = () => {
         }
     };
 
-    for (let i = 0; i < 20; i++) {
-        placeFood();
+    if (!gameStateFromScene) {
+        gameState.creatures.push(new Duck(100, 300, gameState));
+
+        for (let i = 0; i < 20; i++) {
+            placeFood();
+        }
     }
 
     let foodTimer = 0;
