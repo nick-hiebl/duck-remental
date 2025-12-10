@@ -294,7 +294,9 @@ class DuckConfig {
             children: [title, ...this.upgrades.map(u => u.button)],
         });
 
-        box.appendChild(myDiv);
+        if (!gameState.noUI) {
+            box.appendChild(myDiv);
+        }
     }
 
     draw() {

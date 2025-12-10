@@ -1,23 +1,42 @@
 function scenes(sceneKey) {
-    const clearControls = () => {
+    const clearControls = (gameState) => {
         document.getElementById('info').dataset.hidden = true;
         document.getElementById('controls').dataset.hidden = true;
+        document.body.style.margin = '0';
+
+        const onResize = () => {
+            const w = window.innerWidth, h = window.innerHeight;
+
+            gameState.width = w;
+            gameState.height = h;
+            const canvas = document.getElementById('canvas');
+            canvas.width = w;
+            canvas.height = h;
+
+            gameState.items = gameState.items.filter(item => item.x <= w && item.y <= h);
+        };
+
+        window.addEventListener('resize', onResize);
+        onResize();
     };
 
     if (sceneKey === 'gecko') {
-        clearControls();
         const gameState = {
             unspentPoints: 0,
             newFoodValue: 16,
             foodRate: 0.6,
-            foodClusterSize: 25,
-            multiClusterBase: 2,
+            foodClusterSize: 15,
+            multiClusterBase: 1,
             maxFood: 500,
             creatures: [],
+            items: [],
             timePassed: 0,
             width: 800,
             height: 600,
+            noUI: true,
         };
+
+        clearControls(gameState);
 
         gameState.creatures.push(new Gecko(200, 200, gameState));
         gameState.creatures.push(new Gecko(600, 200, gameState));
@@ -42,16 +61,18 @@ const Game = () => {
     const gameStateFromScene = scenes(sceneKey);
 
     const gameState = gameStateFromScene ?? {
-        unspentPoints: 1000000,
+        unspentPoints: 0,
         newFoodValue: 1,
         foodRate: 2.4,
         foodClusterSize: 1,
         multiClusterBase: 0,
         maxFood: 50,
         creatures: [],
+        items: [],
         timePassed: 0,
         width: 800,
         height: 600,
+        noUI: false,
     };
 
     window.gameState = gameState;
@@ -65,19 +86,16 @@ const Game = () => {
         gameControlBox.appendChild(upgrade.button);
     });
 
-    let items = [];
-    window.items = items;
-
     const placeFood = () => {
         const numBundles = Math.ceil(Math.random() + gameState.multiClusterBase);
 
         for (let j = 0; j < numBundles; j++) {
-            const pos = { x: Math.random() * 800, y: Math.random() * 600 };
+            const pos = { x: Math.random() * gameState.width, y: Math.random() * gameState.height };
             const bundleRadius = gameState.foodClusterSize * 5;
             for (let i = 0; i < gameState.foodClusterSize; i++) {
                 const off = { x: Math.random() * bundleRadius - bundleRadius / 2, y: Math.random() * bundleRadius - bundleRadius / 2 };
                 const spot = v_add(pos, off);
-                items.push(new Pellet(spot.x, spot.y, gameState));
+                gameState.items.push(new Pellet(spot.x, spot.y, gameState));
             }
         }
     };
@@ -94,9 +112,9 @@ const Game = () => {
 
     const draw = (ctx) => {
         ctx.fillStyle = '#59f';
-        ctx.fillRect(0, 0, 800, 600);
+        ctx.fillRect(0, 0, gameState.width, gameState.height);
 
-        items.forEach(item => item.draw(ctx));
+        gameState.items.forEach(item => item.draw(ctx));
         gameUpgrades.forEach(upgrade => upgrade.draw());
 
         gameState.creatures.forEach(creature => creature.draw(ctx));
@@ -111,18 +129,17 @@ const Game = () => {
         });
 
         gameState.creatures.forEach(creature => {
-            creature.update(deltaTime, items);
+            creature.update(deltaTime, gameState.items);
             gameState.unspentPoints += creature.score;
             creature.score = 0;
         });
 
-        items = items.filter(item => !item.eaten);
-        items.forEach(item => item.update(deltaTime));
-        window.items = items;
+        gameState.items = gameState.items.filter(item => !item.eaten);
+        gameState.items.forEach(item => item.update(deltaTime));
 
         foodTimer += deltaTime;
 
-        if (foodTimer >= gameState.foodRate && items.length < gameState.maxFood) {
+        if (foodTimer >= gameState.foodRate && gameState.items.length < gameState.maxFood) {
             placeFood();
             foodTimer = 0;
         }

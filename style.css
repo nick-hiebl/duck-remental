@@ -3,10 +3,6 @@ body {
     font-family: sans-serif;
 }
 
-canvas {
-    border: 1px solid black;
-}
-
 .creature-control-box, .info-box {
     background-color: #eee;
     border: 1px solid black;

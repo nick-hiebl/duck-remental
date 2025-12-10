@@ -271,7 +271,9 @@ class FrogConfig {
             children: [title, ...this.upgrades.map(u => u.button)],
         });
 
-        document.getElementById('controls').appendChild(myDiv);
+        if (!gameState.noUI) {
+            document.getElementById('controls').appendChild(myDiv);
+        }
     }
 
     draw() {
