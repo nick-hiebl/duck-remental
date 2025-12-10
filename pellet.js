@@ -52,38 +52,34 @@ class Pellet {
 
         if (this.age < FALL_TIME) {
             const landingFactor = (FALL_TIME - this.age) / FALL_TIME;
-            ctx.fillStyle = '#0006';
 
             const parab = landingFactor - landingFactor * landingFactor;
 
             const shadowRadius = PELLET_RADIUS + parab * 3;
 
-            ctx.filter = `opacity(${200 * parab}%)`
+            const shadowColor = `hsla(0, 0%, 0%, ${0.7 * parab})`;
+
+            ctx.fillStyle = shadowColor;
             ctx.beginPath();
             ctx.ellipse(this.x, this.y, shadowRadius * 1.5, shadowRadius, 0, 0, 2 * Math.PI);
             ctx.fill();
 
-            ctx.filter = `opacity(${100 * (1 - landingFactor)}%)`
             ctx.fillStyle = primaryColor;
             const yOffset = (1 - (1 - landingFactor) * (1 - landingFactor)) * 200
             ctx.fillRect(this.x - PELLET_RADIUS, this.y - PELLET_RADIUS - yOffset, PELLET_RADIUS * 2, PELLET_RADIUS * 2);
-            ctx.filter = 'none';
             return;
         }
 
         if (this.age < FALL_TIME * 2) {
             const rippleFactor = (this.age - FALL_TIME) / FALL_TIME;
 
-            ctx.strokeStyle = 'rgba(38, 139, 255, 1)';
+            ctx.strokeStyle = `rgba(38, 139, 255, ${1 - rippleFactor})`;
             ctx.lineWidth = 2;
 
-            ctx.filter = `opacity(${100 * (1 - rippleFactor)}%)`;
             ctx.beginPath();
             const radius = 20 * Math.sqrt(rippleFactor);
             ctx.ellipse(this.x, this.y, radius * 1.5, radius, 0, 0, 2 * Math.PI);
             ctx.stroke();
-
-            ctx.filter = 'none';
         }
 
         ctx.fillStyle = primaryColor;
