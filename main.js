@@ -20,7 +20,7 @@ function scenes(sceneKey) {
         onResize();
     };
 
-    if (sceneKey === 'gecko') {
+    if (sceneKey === 'gecko' || sceneKey === 'geckoMore') {
         const gameState = {
             unspentPoints: 0,
             newFoodValue: 16,
@@ -42,6 +42,13 @@ function scenes(sceneKey) {
         gameState.creatures.push(new Gecko(600, 200, gameState));
         gameState.creatures.push(new Gecko(200, 400, gameState));
         gameState.creatures.push(new Gecko(600, 400, gameState));
+
+        if (sceneKey === 'geckoMore') {
+            gameState.creatures.push(new Gecko(300, 300, gameState));
+            gameState.creatures.push(new Gecko(700, 300, gameState));
+            gameState.creatures.push(new Gecko(300, 500, gameState));
+            gameState.creatures.push(new Gecko(700, 500, gameState));
+        }
 
         const firstGecko = gameState.creatures[0];
 
