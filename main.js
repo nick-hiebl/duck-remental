@@ -51,9 +51,10 @@ function scenes(sceneKey) {
         }
 
         const firstGecko = gameState.creatures[0];
+        firstGecko.config.eatingCooldown = 0;
 
         GECKO_UPGRADES.find(list => list[0].text === 'Faster')[3].upgrade(firstGecko.config);
-        GECKO_UPGRADES.find(list => list[0].text === 'Eat faster')[6].upgrade(firstGecko.config);
+        // GECKO_UPGRADES.find(list => list[0].text === 'Eat faster')[6].upgrade(firstGecko.config);
 
 
         return gameState;
