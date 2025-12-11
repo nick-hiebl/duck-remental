@@ -59,10 +59,11 @@ function scenes(sceneKey) {
 }
 
 const constructDefaultGameState = () => {
-    return {
+    const state = {
         // Persistent
         unspentPoints: 0,
         creatures: [],
+        upgrades: [], // Will be overridden once we can get a reference to gameState
         // Upgrade-based
         newFoodValue: 1,
         foodRate: 2.4,
@@ -78,6 +79,12 @@ const constructDefaultGameState = () => {
         height: 600,
         noUI: false,
     };
+
+    state.upgrades = GAME_UPGRADES.map(list => {
+        return new Upgrade(list, { gameState: state });
+    });
+
+    return state;
 };
 
 const Game = () => {
@@ -93,10 +100,7 @@ const Game = () => {
 
     const gameControlBox = document.getElementById('game-controls');
 
-    const gameUpgrades = GAME_UPGRADES.map(list => {
-        return new Upgrade(list, { gameState });
-    });
-    gameUpgrades.forEach(upgrade => {
+    gameState.upgrades.forEach(upgrade => {
         gameControlBox.appendChild(upgrade.button);
     });
 
@@ -129,7 +133,7 @@ const Game = () => {
         ctx.fillRect(0, 0, gameState.width, gameState.height);
 
         gameState.items.forEach(item => item.draw(ctx));
-        gameUpgrades.forEach(upgrade => upgrade.draw());
+        gameState.upgrades.forEach(upgrade => upgrade.draw());
 
         gameState.creatures.forEach(creature => creature.draw(ctx));
 
@@ -207,6 +211,7 @@ const GAME_UPGRADES = [
         { cost: 100000, value: 16 },
     ]
         .map(({ cost, value }) => ({
+            id: 'food-value',
             text: 'More valuable food',
             cost,
             upgrade: config => {
@@ -233,6 +238,7 @@ const GAME_UPGRADES = [
         { cost: 5000000, value: 0.45 },
     ]
         .map(({ cost, value }) => ({
+            id: 'food-speed',
             text: 'Throw food faster',
             cost,
             upgrade: config => {
@@ -251,6 +257,7 @@ const GAME_UPGRADES = [
         { cost: 5000, value: 25 },
     ]
         .map(({ cost, value }) => ({
+            id: 'food-group',
             text: 'Bigger handfuls',
             cost,
             upgrade: config => {
@@ -269,6 +276,7 @@ const GAME_UPGRADES = [
         { cost: 200000, value: 2 },
     ]
         .map(({ cost, value }) => ({
+            id: 'food-clusters',
             text: 'Multi cluster chance',
             cost,
             upgrade: config => {
@@ -286,6 +294,7 @@ const GAME_UPGRADES = [
         { cost: 100000, value: 650 },
     ]
         .map(({ cost, value }) => ({
+            id: 'food-max',
             text: 'More max food',
             cost,
             upgrade: config => {
@@ -303,6 +312,7 @@ const GAME_UPGRADES = [
         { cost: 100000000 },
     ]
         .map(({ cost }) => ({
+            id: 'count-duck',
             text: 'Another duck',
             cost,
             upgrade: config => {
@@ -320,6 +330,7 @@ const GAME_UPGRADES = [
         { cost: 300000000 },
     ]
         .map(({ cost }) => ({
+            id: 'count-crab',
             text: 'A crab',
             cost,
             upgrade: config => {
@@ -337,6 +348,7 @@ const GAME_UPGRADES = [
         { cost: 700000000 },
     ]
         .map(({ cost }) => ({
+            id: 'count-frog',
             text: 'A frog',
             cost,
             upgrade: config => {
@@ -354,6 +366,7 @@ const GAME_UPGRADES = [
         { cost: 500000000 },
     ]
         .map(({ cost }) => ({
+            id: 'count-gecko',
             text: 'A gecko',
             cost,
             upgrade: config => {

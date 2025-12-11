@@ -529,6 +529,7 @@ const CRAB_UPGRADES = [
         { cost: 5000, speed: 380, accel: 1000, decel: 1800, turning: 3 },
     ]
         .map(({ cost, speed, accel, decel, turning }) => ({
+            id: 'crab-speed',
             text: 'Faster',
             cost,
             upgrade: config => {
@@ -548,6 +549,7 @@ const CRAB_UPGRADES = [
         { cost: 20000, value: 0.22 },
     ]
         .map(({ cost, value }) => ({
+            id: 'crab-eat',
             text: 'Eat faster',
             cost,
             upgrade: config => {
@@ -563,6 +565,7 @@ const CRAB_UPGRADES = [
         { cost: 100000, value: 25 },
     ]
         .map(({ cost, value }) => ({
+            id: 'crab-size',
             text: 'Size',
             cost,
             upgrade: config => {

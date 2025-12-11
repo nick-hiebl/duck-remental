@@ -341,6 +341,7 @@ const GECKO_UPGRADES = [
         { cost: 5000, speed: 720, accel: 1000, decel: 1800 },
     ]
         .map(({ cost, speed, accel, decel }) => ({
+            id: 'gecko-speed',
             text: 'Faster',
             cost,
             upgrade: config => {
@@ -361,6 +362,7 @@ const GECKO_UPGRADES = [
         { cost: 20000, value: 0.22 },
     ]
         .map(({ cost, value }) => ({
+            id: 'gecko-eat',
             text: 'Eat faster',
             cost,
             upgrade: config => {

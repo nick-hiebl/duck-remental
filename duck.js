@@ -315,6 +315,7 @@ const DUCK_UPGRADES = [
         { cost: 5000, speed: 720, accel: 1000, decel: 1800, turning: 11 },
     ]
         .map(({ cost, speed, accel, decel, turning }) => ({
+            id: 'duck-speed',
             text: 'Faster',
             cost,
             upgrade: config => {
@@ -334,6 +335,7 @@ const DUCK_UPGRADES = [
         { cost: 20000, value: 0.22 },
     ]
         .map(({ cost, value }) => ({
+            id: 'duck-eat',
             text: 'Eat faster',
             cost,
             upgrade: config => {
@@ -349,6 +351,7 @@ const DUCK_UPGRADES = [
         { cost: 100000, value: 40 },
     ]
         .map(({ cost, value }) => ({
+            id: 'duck-size',
             text: 'Size',
             cost,
             upgrade: config => {

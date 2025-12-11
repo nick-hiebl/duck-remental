@@ -302,6 +302,7 @@ const FROG_UPGRADES = [
         { cost: 100000, size: 22 },
     ]
         .map(({ cost, size }) => ({
+            id: 'frog-size',
             text: 'Bigger',
             cost,
             upgrade: config => {
@@ -318,6 +319,7 @@ const FROG_UPGRADES = [
         { cost: 250, speed: 40 },
     ]
         .map(({ cost, speed }) => ({
+            id: 'frog-tongue',
             text: 'Faster tongue',
             cost,
             upgrade: config => {
@@ -334,6 +336,7 @@ const FROG_UPGRADES = [
         { cost: 25000, value: 0.22 },
     ]
         .map(({ cost, value }) => ({
+            id: 'frog-eat',
             text: 'Eat faster',
             cost,
             upgrade: config => {
@@ -350,6 +353,7 @@ const FROG_UPGRADES = [
         { cost: 2500, speed: 210, gravity: -210, cd: 0.07 },
     ]
         .map(({ cost, speed, gravity, cd }) => ({
+            id: 'frog-speed',
             text: 'Move faster',
             cost,
             upgrade: config => {
