@@ -32,16 +32,16 @@ class Gecko {
         this.segments = [];
 
         let i = 0;
-        const hueShiftSign = Math.random() > 0.5 ? 1 : -1;
+        const hueShiftSign = chooseRandom([-1, -0.5, 0, 0.5, 1]);
         for (const seg of SEG_LENGTHS) {
-            i += 1;
+            i += hueShiftSign * seg;
             runningX -= seg * .8;
 
             const segment = {
                 pos: { x: runningX, y },
                 length: seg * .8,
                 radius: seg,
-                color: `hsla(${hue + i * 5 * hueShiftSign}, ${saturation}%, ${lightness}%, 1.00)`,
+                color: `hsla(${hue + i}, ${saturation}%, ${lightness}%, 1.00)`,
             };
 
             if (ARMS.includes(seg)) {
