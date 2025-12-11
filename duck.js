@@ -13,7 +13,7 @@ const EAT_DIST = 20;
 const MAX_EATING_SPEED = 0.1;
 
 class Duck {
-    constructor(x, y, gameState) {
+    constructor(x, y, gameState, init) {
         this.id = Math.random().toString().slice(2);
 
         this.x = x;
@@ -33,9 +33,9 @@ class Duck {
         this.beakOffset = this.getBeakOffset();
 
         // Peristent
-        this.beakColor = `hsla(${randInt(42, 62)}, ${randInt(80, 100)}%, ${randInt(60, 80)}%, 1.00)`;
-        this.headColor = `hsla(${randInt(92, 210)}, ${randInt(40, 80)}%, ${randInt(25, 48)}%, 1.00)`;
-        this.bodyColor = `hsla(${randInt(10, 40)}, ${randInt(45, 70)}%, ${randInt(15, 30)}%, 1.00)`
+        this.beakColor = init?.beakColor ?? `hsla(${randInt(42, 62)}, ${randInt(80, 100)}%, ${randInt(60, 80)}%, 1.00)`;
+        this.headColor = init?.headColor ?? `hsla(${randInt(92, 210)}, ${randInt(40, 80)}%, ${randInt(25, 48)}%, 1.00)`;
+        this.bodyColor = init?.bodyColor ?? `hsla(${randInt(10, 40)}, ${randInt(45, 70)}%, ${randInt(15, 30)}%, 1.00)`
     }
 
     get pos() {

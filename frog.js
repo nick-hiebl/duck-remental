@@ -1,7 +1,7 @@
 
 
 class Frog {
-    constructor(x, y, gameState) {
+    constructor(x, y, gameState, init) {
         this.id = Math.random().toString().slice(2);
 
         this.x = x;
@@ -29,7 +29,7 @@ class Frog {
         this.config = FrogConfig.get(gameState);
 
         // Persistent
-        this.color = `hsla(${randInt(110, 140)}, ${randInt(50, 90)}%, ${randInt(20, 50)}%, 1.00)`;
+        this.color = init?.color ?? `hsla(${randInt(110, 140)}, ${randInt(50, 90)}%, ${randInt(20, 50)}%, 1.00)`;
     }
 
     get pos() {

@@ -51,8 +51,6 @@ function scenes(sceneKey) {
         firstGecko.config.eatingCooldown = 0;
 
         GECKO_UPGRADES.find(list => list[0].text === 'Faster')[3].upgrade(firstGecko.config);
-        // GECKO_UPGRADES.find(list => list[0].text === 'Eat faster')[6].upgrade(firstGecko.config);
-
 
         return gameState;
     }
@@ -94,7 +92,7 @@ const Game = () => {
 
     const gameStateFromScene = scenes(sceneKey);
 
-    const gameState = gameStateFromScene ?? constructDefaultGameState();
+    const gameState = gameStateFromScene ?? STORAGE_INSTANCE.load();
 
     window.gameState = gameState;
 
@@ -103,6 +101,18 @@ const Game = () => {
     gameState.upgrades.forEach(upgrade => {
         gameControlBox.appendChild(upgrade.button);
     });
+
+    const save = () => {
+        STORAGE_INSTANCE.save(gameState);
+    };
+
+    const deleteSave = () => {
+        STORAGE_INSTANCE.clear();
+    };
+
+    document.getElementById('save').addEventListener('click', save);
+
+    document.getElementById('delete').addEventListener('click', deleteSave);
 
     const placeFood = () => {
         const numBundles = Math.ceil(Math.random() + gameState.multiClusterBase);
@@ -118,9 +128,11 @@ const Game = () => {
         }
     };
 
-    if (!gameStateFromScene) {
+    if (gameState.creatures.length === 0) {
         gameState.creatures.push(new Duck(100, 300, gameState));
+    }
 
+    if (gameState.upgrades.every(up => up.progress === 0)) {
         for (let i = 0; i < 20; i++) {
             placeFood();
         }
@@ -166,6 +178,8 @@ const Game = () => {
     return {
         draw,
         update,
+        save,
+        deleteSave,
     };
 };
 
@@ -190,6 +204,10 @@ const main = () => {
 
         requestAnimationFrame(loop);
     };
+
+    setInterval(() => {
+        game.save();
+    }, 5000);
 
     requestAnimationFrame(loop);
 };

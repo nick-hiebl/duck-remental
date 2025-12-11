@@ -1,5 +1,5 @@
 class Gecko {
-    constructor(x, y, gameState) {
+    constructor(x, y, gameState, init) {
         this.id = Math.random().toString().slice(2);
 
         this.x = x;
@@ -19,10 +19,14 @@ class Gecko {
         this.distanceTravelled = 0;
 
         // Persistent
-        const hue = randInt(320, 480);
-        const saturation = randInt(80, 100);
-        const lightness = randInt(60, 80);
-        const hueShiftSign = chooseRandom([-1, -0.5, 0, 0.5, 1]);
+        const hue = init?.hue ?? randInt(320, 480);
+        const saturation = init?.saturation ?? randInt(80, 100);
+        const lightness = init?.lightness ?? randInt(60, 80);
+        const hueShiftSign = init?.hueShiftSign ?? chooseRandom([-1, -0.5, 0, 0.5, 1]);
+        this.hue = hue;
+        this.saturation = saturation;
+        this.lightness = lightness;
+        this.hueShiftSign = hueShiftSign;
 
         // Derived
         this.mainColor = `hsla(${hue}, ${saturation}%, ${lightness}%, 1.00)`;

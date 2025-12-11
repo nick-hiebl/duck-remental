@@ -2,6 +2,7 @@ class Upgrade {
     constructor(levels, config) {
         this.config = config;
         this.levels = levels;
+        this.id = levels[0].id;
 
         this.progress = 0;
 

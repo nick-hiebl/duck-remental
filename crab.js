@@ -2,7 +2,7 @@ const CRAB_TARGET_ANGLE = 0.2;
 const CRAB_LEG_PAIRS = 4;
 
 class Crab {
-    constructor(x, y, gameState) {
+    constructor(x, y, gameState, init) {
         this.id = Math.random().toString().slice(2);
 
         this.x = x;
@@ -30,13 +30,13 @@ class Crab {
         this.visualLegEnds = [...this.actualLegEnds];
 
         // Persistent
-        this.hue = randInt(0, 360);
-        this.saturation = randInt(70, 90);
-        this.lightness = randInt(40, 65);
+        this.hue = init?.hue ?? randInt(0, 360);
+        this.saturation = init?.saturation ?? randInt(70, 90);
+        this.lightness = init?.lightness ?? randInt(40, 65);
 
         // Derived
-        this.mainColor = `hsla(${hue}, ${saturation}%, ${lightness}%, 1.00)`;
-        this.legColor = `hsla(${hue}, ${saturation}%, ${lightness - 10}%, 1.00)`;
+        this.mainColor = `hsla(${this.hue}, ${this.saturation}%, ${this.lightness}%, 1.00)`;
+        this.legColor = `hsla(${this.hue}, ${this.saturation}%, ${this.lightness - 10}%, 1.00)`;
     }
 
     get pos() {
