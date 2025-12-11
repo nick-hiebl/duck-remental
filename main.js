@@ -22,17 +22,14 @@ function scenes(sceneKey) {
 
     if (sceneKey === 'gecko' || sceneKey === 'geckoMore') {
         const gameState = {
-            unspentPoints: 0,
+            ...constructDefaultGameState(),
+            // Scene-specific config
             newFoodValue: 16,
             foodRate: 0.6,
             foodClusterSize: 15,
             multiClusterBase: 1,
             maxFood: 500,
-            creatures: [],
-            items: [],
-            timePassed: 0,
-            width: 800,
-            height: 600,
+            // Visual/gamemode config
             noUI: true,
         };
 
@@ -61,6 +58,28 @@ function scenes(sceneKey) {
     }
 }
 
+const constructDefaultGameState = () => {
+    return {
+        // Persistent
+        unspentPoints: 0,
+        creatures: [],
+        // Upgrade-based
+        newFoodValue: 1,
+        foodRate: 2.4,
+        foodClusterSize: 1,
+        multiClusterBase: 0,
+        maxFood: 50,
+        // State
+        items: [],
+        // Graphical
+        timePassed: 0,
+        // Visual/gamemode config
+        width: 800,
+        height: 600,
+        noUI: false,
+    };
+};
+
 const Game = () => {
     const search = new URLSearchParams(location.search);
 
@@ -68,20 +87,7 @@ const Game = () => {
 
     const gameStateFromScene = scenes(sceneKey);
 
-    const gameState = gameStateFromScene ?? {
-        unspentPoints: 0,
-        newFoodValue: 1,
-        foodRate: 2.4,
-        foodClusterSize: 1,
-        multiClusterBase: 0,
-        maxFood: 50,
-        creatures: [],
-        items: [],
-        timePassed: 0,
-        width: 800,
-        height: 600,
-        noUI: false,
-    };
+    const gameState = gameStateFromScene ?? constructDefaultGameState();
 
     window.gameState = gameState;
 

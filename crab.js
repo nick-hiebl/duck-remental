@@ -29,9 +29,12 @@ class Crab {
         this.actualLegEnds = this.getIdealLegEnds();
         this.visualLegEnds = [...this.actualLegEnds];
 
-        const hue = randInt(0, 360);
-        const saturation = randInt(70, 90);
-        const lightness = randInt(40, 65);
+        // Persistent
+        this.hue = randInt(0, 360);
+        this.saturation = randInt(70, 90);
+        this.lightness = randInt(40, 65);
+
+        // Derived
         this.mainColor = `hsla(${hue}, ${saturation}%, ${lightness}%, 1.00)`;
         this.legColor = `hsla(${hue}, ${saturation}%, ${lightness - 10}%, 1.00)`;
     }

@@ -18,9 +18,13 @@ class Gecko {
         this.heading = { x: 1, y: 0 };
         this.distanceTravelled = 0;
 
+        // Persistent
         const hue = randInt(320, 480);
         const saturation = randInt(80, 100);
         const lightness = randInt(60, 80);
+        const hueShiftSign = chooseRandom([-1, -0.5, 0, 0.5, 1]);
+
+        // Derived
         this.mainColor = `hsla(${hue}, ${saturation}%, ${lightness}%, 1.00)`;
 
         const SEG_LENGTHS = [7, 9, 12, 10, 8, 6, 5, 5, 4, 4, 3, 3, 2, 1];
@@ -32,7 +36,6 @@ class Gecko {
         this.segments = [];
 
         let i = 0;
-        const hueShiftSign = chooseRandom([-1, -0.5, 0, 0.5, 1]);
         for (const seg of SEG_LENGTHS) {
             i += hueShiftSign * seg;
             runningX -= seg * .8;

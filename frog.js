@@ -28,6 +28,7 @@ class Frog {
 
         this.config = FrogConfig.get(gameState);
 
+        // Persistent
         this.color = `hsla(${randInt(110, 140)}, ${randInt(50, 90)}%, ${randInt(20, 50)}%, 1.00)`;
     }
 

@@ -5,24 +5,24 @@ class Upgrade {
 
         this.progress = 0;
 
-        const name = createElement('span', { text: levels[0].text });
-        const levelSpan = createElement('span', { text: 'level 0' });
+        this.nameSpan = createElement('span', { text: levels[0].text });
+        this.levelSpan = createElement('span', { text: 'level 0' });
 
         const div1 = createElement('div', {
             children: [
-                name,
+                this.nameSpan,
                 createTextNode(' ('),
-                levelSpan,
+                this.levelSpan,
                 createTextNode(')'),
             ],
         });
 
-        const priceSpan = createElement('span', { text: levels[0].cost });
+        this.priceSpan = createElement('span', { text: levels[0].cost });
 
         const div2 = createElement('div', {
             children: [
                 createTextNode('Cost: '),
-                priceSpan,
+                this.priceSpan,
             ],
         });
 
@@ -39,19 +39,34 @@ class Upgrade {
                     if (this.config.gameState.unspentPoints >= relevantStage.cost) {
                         this.config.gameState.unspentPoints -= relevantStage.cost;
                         this.progress += 1;
-                        relevantStage.upgrade(this.config);
-
-                        if (this.levels[this.progress]) {
-                            name.textContent = this.levels[this.progress].text;
-                            levelSpan.textContent = `level ${this.progress}`;
-                            priceSpan.textContent = this.levels[this.progress].cost;
-                        } else {
-                            levelSpan.textContent = 'MAX';
-                        }
+                        this.setLevel(this.progress);
                     }
                 },
             },
         });
+    }
+
+    setLevel(level) {
+        if (!this.levels[level - 1]) {
+            return;
+        }
+
+        this.progress = level;
+
+        if (this.levels[this.progress]) {
+            this.nameSpan.textContent = this.levels[this.progress].text;
+            this.levelSpan.textContent = `level ${this.progress}`;
+            this.priceSpan.textContent = this.levels[this.progress].cost;
+            this.levels[this.progress - 1].upgrade(this.config);
+        } else if (this.levels[this.progress - 1]) {
+            this.nameSpan.textContent = this.levels[this.progress - 1].text;
+            this.priceSpan.textContent = this.levels[this.progress - 1].cost;
+            this.levelSpan.textContent = `MAX`;
+            this.levels[this.progress - 1].upgrade(this.config);
+        } else {
+            this.levelSpan.textContent = `MAX`;
+            this.levels[this.levels.length - 1].upgrade(this.config);
+        }
     }
 
     draw() {
