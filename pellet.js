@@ -11,6 +11,8 @@ class Pellet {
         this.gameState = gameState;
 
         this.age = Math.random() * -0.2;
+
+        this.hue = Math.floor(300 * Math.pow(1.618, this.foodValue - 1));
     }
 
     eat() {
@@ -27,23 +29,12 @@ class Pellet {
     }
 
     draw(ctx) {
-        let primaryColor = {
-            1: 'black',
-            2: 'gold',
-            3: 'darkgreen',
-            4: 'white',
-            5: '#ddf',
-            6: '#fb3',
-            8: '#f88',
-            10: '#6f8',
-            12: '#d4e',
-            16: '#61d',
-        }[this.foodValue];
-
         if (this.foodValue === 16) {
             const pos = this.x * 3 + this.y + this.gameState.timePassed * 120;
-            primaryColor = `hsl(${pos / 10}, 90%, 50%)`;
+            this.hue = pos / 10;
         }
+
+        this.primaryColor = `hsla(${this.hue}, 90%, 50%, 1.00)`;
 
         const FALL_TIME = 1;
         if (this.age < 0) {
@@ -64,9 +55,9 @@ class Pellet {
             ctx.ellipse(this.x, this.y, shadowRadius * 1.5, shadowRadius, 0, 0, 2 * Math.PI);
             ctx.fill();
 
-            ctx.fillStyle = primaryColor;
-            const yOffset = (1 - (1 - landingFactor) * (1 - landingFactor)) * 200
-            ctx.fillRect(this.x - PELLET_RADIUS, this.y - PELLET_RADIUS - yOffset, PELLET_RADIUS * 2, PELLET_RADIUS * 2);
+            ctx.fillStyle = `hsla(${this.hue}, 90%, 50%, ${1 - landingFactor})`;
+            const yOffset = (1 - (1 - landingFactor) * (1 - landingFactor)) * 200;
+            v_circle(ctx, v_add(this, { x: 0, y: -yOffset }), PELLET_RADIUS);
             return;
         }
 
@@ -82,7 +73,7 @@ class Pellet {
             ctx.stroke();
         }
 
-        ctx.fillStyle = primaryColor;
-        ctx.fillRect(this.x - PELLET_RADIUS, this.y - PELLET_RADIUS, PELLET_RADIUS * 2, PELLET_RADIUS * 2);
+        ctx.fillStyle = this.primaryColor;
+        v_circle(ctx, this, PELLET_RADIUS);
     }
 }

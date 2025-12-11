@@ -103,21 +103,31 @@ class Frog {
         } else if (items.length === 1) {
             closestItem = items[0];
         } else {
-            const weights = items.map(item => {
-                return {
-                    weight: 1 / (dist(this, item) + 1),
-                    item,
-                };
+            const inRangeItems = items.filter(item => {
+                const distance = dist(this, item);
+
+                return this.config.minTongueDist < distance && distance < this.config.tongueDist;
             });
 
-            const BEST_TO_CHOOSE = 3;
-
-            const result = chooseRandom(bestNItems(weights, BEST_TO_CHOOSE));
-
-            if (result) {
-                closestItem = result.item;
+            if (inRangeItems.length > 0) {
+                closestItem = chooseRandom(inRangeItems);
             } else {
-                throw Error('Failed to select item');
+                const weights = items.map(item => {
+                    return {
+                        weight: 1 / (dist(this, item) + 1),
+                        item,
+                    };
+                });
+
+                const BEST_TO_CHOOSE = 3;
+
+                const result = chooseRandom(bestNItems(weights, BEST_TO_CHOOSE));
+
+                if (result) {
+                    closestItem = result.item;
+                } else {
+                    throw Error('Failed to select item');
+                }
             }
         }
 
