@@ -29,6 +29,19 @@ p {
     gap: 8px;
 }
 
+#core-controls {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 0;
+    gap: 8px;
+    padding: 8px;
+}
+
+#all-controls {
+    max-height: 600px;
+    overflow-y: scroll;
+}
+
 #controls {
     display: flex;
     flex-direction: row;

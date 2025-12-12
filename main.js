@@ -1,7 +1,9 @@
 function scenes(sceneKey) {
+    const canvas = document.getElementById('canvas');
+
     const clearControls = (gameState) => {
-        document.getElementById('info').dataset.hidden = true;
-        document.getElementById('controls').dataset.hidden = true;
+        document.getElementById('all-controls').dataset.hidden = true;
+
         document.body.style.margin = '0';
 
         const onResize = () => {
@@ -9,7 +11,7 @@ function scenes(sceneKey) {
 
             gameState.width = w;
             gameState.height = h;
-            const canvas = document.getElementById('canvas');
+
             canvas.width = w;
             canvas.height = h;
 
@@ -295,7 +297,7 @@ const GAME_UPGRADES = [
     ]
         .map(({ cost, value }) => ({
             id: 'food-clusters',
-            text: 'Multi cluster chance',
+            text: 'More handfuls chance',
             cost,
             upgrade: config => {
                 config.gameState.multiClusterBase = value;
