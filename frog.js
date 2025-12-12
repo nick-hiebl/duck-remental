@@ -294,36 +294,22 @@ class FrogConfig {
 
 const FROG_UPGRADES = [
     [
-        { cost: 1, size: 12 },
-        { cost: 10, size: 14 },
-        { cost: 100, size: 16 },
-        { cost: 1000, size: 18 },
-        { cost: 10000, size: 20 },
-        { cost: 100000, size: 22 },
+        { cost: 1, speed: 65, gravity: -110, cd: 0.25 },
+        { cost: 10, speed: 80, gravity: -130, cd: 0.20 },
+        { cost: 25, speed: 100, gravity: -140, cd: 0.15 },
+        { cost: 100, speed: 135, gravity: -160, cd: 0.1 },
+        { cost: 250, speed: 160, gravity: -190, cd: 0.085 },
+        { cost: 1000, speed: 190, gravity: -200, cd: 0.08 },
+        { cost: 2500, speed: 210, gravity: -210, cd: 0.07 },
     ]
-        .map(({ cost, size }) => ({
-            id: 'frog-size',
-            text: 'Bigger',
+        .map(({ cost, speed, gravity, cd }) => ({
+            id: 'frog-speed',
+            text: 'Faster',
             cost,
             upgrade: config => {
-                config.size = size;
-                config.minTongueDist = 1.5 * size;
-                config.tongueDist = 4.5 * size;
-            },
-        })),
-    [
-        { cost: 1, speed: 15 },
-        { cost: 10, speed: 21 },
-        { cost: 50, speed: 27 },
-        { cost: 100, speed: 33 },
-        { cost: 250, speed: 40 },
-    ]
-        .map(({ cost, speed }) => ({
-            id: 'frog-tongue',
-            text: 'Faster tongue',
-            cost,
-            upgrade: config => {
-                config.tongueSpeed = speed;
+                config.speed = speed;
+                config.gravity = gravity;
+                config.landingCooldown = cd;
             },
         })),
     [
@@ -344,22 +330,36 @@ const FROG_UPGRADES = [
             },
         })),
     [
-        { cost: 1, speed: 65, gravity: -110, cd: 0.25 },
-        { cost: 10, speed: 80, gravity: -130, cd: 0.20 },
-        { cost: 25, speed: 100, gravity: -140, cd: 0.15 },
-        { cost: 100, speed: 135, gravity: -160, cd: 0.1 },
-        { cost: 250, speed: 160, gravity: -190, cd: 0.085 },
-        { cost: 1000, speed: 190, gravity: -200, cd: 0.08 },
-        { cost: 2500, speed: 210, gravity: -210, cd: 0.07 },
+        { cost: 1, size: 12 },
+        { cost: 10, size: 14 },
+        { cost: 100, size: 16 },
+        { cost: 1000, size: 18 },
+        { cost: 10000, size: 20 },
+        { cost: 100000, size: 22 },
     ]
-        .map(({ cost, speed, gravity, cd }) => ({
-            id: 'frog-speed',
-            text: 'Move faster',
+        .map(({ cost, size }) => ({
+            id: 'frog-size',
+            text: 'Size',
             cost,
             upgrade: config => {
-                config.speed = speed;
-                config.gravity = gravity;
-                config.landingCooldown = cd;
+                config.size = size;
+                config.minTongueDist = 1.5 * size;
+                config.tongueDist = 4.5 * size;
+            },
+        })),
+    [
+        { cost: 1, speed: 15 },
+        { cost: 10, speed: 21 },
+        { cost: 50, speed: 27 },
+        { cost: 100, speed: 33 },
+        { cost: 250, speed: 40 },
+    ]
+        .map(({ cost, speed }) => ({
+            id: 'frog-tongue',
+            text: 'Faster tongue',
+            cost,
+            upgrade: config => {
+                config.tongueSpeed = speed;
             },
         })),
 ];

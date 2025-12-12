@@ -1,12 +1,20 @@
 body {
-    background-color: #333;
+    background-color: #eee;
     font-family: sans-serif;
+    margin: 0;
+}
+
+#content {
+    display: flex;
+    flex-direction: row;
+}
+
+p {
+    margin-block: 4px;
 }
 
 .creature-control-box, .info-box {
     background-color: #eee;
-    border: 1px solid black;
-    margin: 8px;
     padding: 8px;
 
     display: flex;
@@ -29,4 +37,24 @@ body {
 
 div[data-hidden=true] {
     display: none;
+}
+
+button {
+    cursor: pointer;
+    border: 1px solid black;
+    border-radius: 2px;
+    background-color: #ddd;
+}
+
+button:hover {
+    background-color: #bbb;
+}
+
+button:active {
+    background-color: #999;
+}
+
+button:disabled {
+    color: #888;
+    background-color: #ddd;
 }

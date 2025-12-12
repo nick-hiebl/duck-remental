@@ -5,17 +5,21 @@
         <link rel="stylesheet" href="./style.css">
     </head>
     <body>
-        <canvas id="canvas" width="800" height="600"></canvas>
-        <div id="info" class="info-box">
-            <span>
-                Crumbs collected: <span id="crumbs">0</span>
-            </span>
-            <div id="game-controls">
-                <button id="save">Save</button>
-                <button id="delete">Delete save</button>
+        <div id="content">
+            <canvas id="canvas" width="800" height="600"></canvas>
+            <div id="all-controls">
+                <div id="info" class="info-box">
+                    <p>
+                        Dots collected: <span id="crumbs">0</span>
+                    </p>
+                    <div id="game-controls">
+                        <button id="save">Save</button>
+                        <button id="delete">Delete save</button>
+                    </div>
+                </div>
+                <div id="controls"></div>
             </div>
         </div>
-        <div id="controls"></div>
         
         <script src="./storage.js"></script>
         <script src="./dom.js"></script>
