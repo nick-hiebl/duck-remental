@@ -64,7 +64,7 @@ class Pellet {
         if (this.age < FALL_TIME * 2) {
             const rippleFactor = (this.age - FALL_TIME) / FALL_TIME;
 
-            ctx.strokeStyle = `rgba(38, 139, 255, ${1 - rippleFactor})`;
+            ctx.strokeStyle = `rgba(45, 95, 210, ${1 - rippleFactor})`;
             ctx.lineWidth = 2;
 
             ctx.beginPath();

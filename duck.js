@@ -342,22 +342,4 @@ const DUCK_UPGRADES = [
                 config.eatingCooldown = value;
             },
         })),
-    [
-        { cost: 1, value: 24 },
-        { cost: 10, value: 27 },
-        { cost: 100, value: 30 },
-        { cost: 1000, value: 33 },
-        { cost: 10000, value: 36 },
-        { cost: 100000, value: 40 },
-    ]
-        .map(({ cost, value }) => ({
-            id: 'duck-size',
-            text: 'Size',
-            cost,
-            upgrade: config => {
-                config.eatDist = value;
-                config.size = RADIUS / EAT_DIST * value;
-                config.headSize = config.size * 0.75;
-            },
-        })),
 ];

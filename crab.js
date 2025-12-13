@@ -131,34 +131,6 @@ class Crab {
         v_circle(ctx, rightEye, eyeRadius);
         v_circle(ctx, leftEye, eyeRadius);
 
-        // const idealLegEnds = this.getIdealLegEnds();
-        // idealLegEnds.forEach(pos => {
-        //     v_circle(ctx, pos, 2);
-        // });
-
-        // ctx.beginPath();
-        // ctx.ellipse(leftHand.x, leftHand.y, this.config.size * 0.55, this.config.size * 0.55, 0, 0, 2 * Math.PI);
-        // ctx.ellipse(rightHand.x, rightHand.y, this.config.size * 0.55, this.config.size * 0.55, 0, 0, 2 * Math.PI);
-        // ctx.fill();
-
-        // ctx.lineWidth = 1;
-        // if (this.target) {
-        //     ctx.strokeStyle = 'yellow';
-        //     ctx.beginPath();
-        //     ctx.ellipse(this.target.x, this.target.y, 12, 12, 0, 0, 2 * Math.PI);
-        //     ctx.stroke();
-
-        //     ctx.beginPath();
-        //     ctx.moveTo(this.x, this.y);
-        //     ctx.lineTo(this.x + this.heading.x * 100, this.y + this.heading.y * 100);
-        //     ctx.stroke();
-        // }
-
-        // ctx.strokeStyle = 'yellow';
-        // ctx.beginPath();
-        // ctx.ellipse(this.x, this.y, this.config.eatDist, this.config.eatDist, 0, 0, 2 * Math.PI);
-        // ctx.stroke();
-
         this.config.draw();
     }
 
@@ -433,10 +405,6 @@ class Crab {
 
         this.pos = v_add(this.pos, v_scale(this.vel, deltaTime));
 
-        // if (this.vel.x !== 0 || this.vel.y !== 0) {
-        //     this.heading = v_set_magnitude(this.vel, 1);
-        // }
-
         if (isNaN(this.pos.x) || isNaN(this.pos.y)) {
             console.log(this.vel, deltaTime);
         }
@@ -554,23 +522,6 @@ const CRAB_UPGRADES = [
             cost,
             upgrade: config => {
                 config.eatingCooldown = value;
-            },
-        })),
-    [
-        { cost: 1, value: 15 },
-        { cost: 10, value: 17 },
-        { cost: 100, value: 19 },
-        { cost: 1000, value: 21 },
-        { cost: 10000, value: 23 },
-        { cost: 100000, value: 25 },
-    ]
-        .map(({ cost, value }) => ({
-            id: 'crab-size',
-            text: 'Size',
-            cost,
-            upgrade: config => {
-                config.eatDist = value;
-                config.size = CRAB_RADIUS / CRAB_EAT_DIST * value;
             },
         })),
 ];

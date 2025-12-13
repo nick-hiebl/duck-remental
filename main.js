@@ -143,7 +143,7 @@ const Game = () => {
     let foodTimer = 0;
 
     const draw = (ctx) => {
-        ctx.fillStyle = '#59f';
+        ctx.fillStyle = '#47e';
         ctx.fillRect(0, 0, gameState.width, gameState.height);
 
         gameState.items.forEach(item => item.draw(ctx));

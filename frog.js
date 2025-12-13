@@ -313,53 +313,21 @@ const FROG_UPGRADES = [
             },
         })),
     [
-        { cost: 1, value: 1.6 },
-        { cost: 10, value: 1.3 },
-        { cost: 50, value: 1.0 },
-        { cost: 250, value: 0.75 },
-        { cost: 1000, value: 0.4 },
-        { cost: 5000, value: 0.3 },
-        { cost: 25000, value: 0.22 },
+        { cost: 1, eatingCooldown: 1.6, tongueSpeed: 15 },
+        { cost: 10, eatingCooldown: 1.3, tongueSpeed: 21 },
+        { cost: 50, eatingCooldown: 1.0, tongueSpeed: 27 },
+        { cost: 250, eatingCooldown: 0.75, tongueSpeed: 33 },
+        { cost: 1000, eatingCooldown: 0.4, tongueSpeed: 40 },
+        { cost: 5000, eatingCooldown: 0.3, tongueSpeed: 48 },
+        { cost: 25000, eatingCooldown: 0.22, tongueSpeed: 56 },
     ]
-        .map(({ cost, value }) => ({
+        .map(({ cost, eatingCooldown, tongueSpeed }) => ({
             id: 'frog-eat',
             text: 'Eat faster',
             cost,
             upgrade: config => {
-                config.eatingCooldown = value;
-            },
-        })),
-    [
-        { cost: 1, size: 12 },
-        { cost: 10, size: 14 },
-        { cost: 100, size: 16 },
-        { cost: 1000, size: 18 },
-        { cost: 10000, size: 20 },
-        { cost: 100000, size: 22 },
-    ]
-        .map(({ cost, size }) => ({
-            id: 'frog-size',
-            text: 'Size',
-            cost,
-            upgrade: config => {
-                config.size = size;
-                config.minTongueDist = 1.5 * size;
-                config.tongueDist = 4.5 * size;
-            },
-        })),
-    [
-        { cost: 1, speed: 15 },
-        { cost: 10, speed: 21 },
-        { cost: 50, speed: 27 },
-        { cost: 100, speed: 33 },
-        { cost: 250, speed: 40 },
-    ]
-        .map(({ cost, speed }) => ({
-            id: 'frog-tongue',
-            text: 'Faster tongue',
-            cost,
-            upgrade: config => {
-                config.tongueSpeed = speed;
+                config.eatingCooldown = eatingCooldown;
+                config.tongueSpeed = tongueSpeed;
             },
         })),
 ];
