@@ -235,6 +235,7 @@ const GAME_UPGRADES = [
         .map(({ cost, value }) => ({
             id: 'food-value',
             text: 'More valuable food',
+            tooltip: 'Individual food items count for multiple',
             cost,
             upgrade: config => {
                 config.gameState.newFoodValue = value;
@@ -264,6 +265,7 @@ const GAME_UPGRADES = [
         .map(({ cost, value }) => ({
             id: 'food-speed',
             text: 'Throw food faster',
+            tooltip: 'Cooldown between food dropping is reduced',
             cost,
             upgrade: config => {
                 config.gameState.foodRate = value;
@@ -287,6 +289,7 @@ const GAME_UPGRADES = [
         .map(({ cost, value }) => ({
             id: 'food-group',
             text: 'Bigger handfuls',
+            tooltip: 'More food pellets will be dropped per throw',
             cost,
             upgrade: config => {
                 config.gameState.foodClusterSize = value;
@@ -308,6 +311,7 @@ const GAME_UPGRADES = [
         .map(({ cost, value }) => ({
             id: 'food-clusters',
             text: 'More handfuls chance',
+            tooltip: 'Chance rises for multiple handfuls of food to be thrown at once',
             cost,
             upgrade: config => {
                 config.gameState.multiClusterBase = value;

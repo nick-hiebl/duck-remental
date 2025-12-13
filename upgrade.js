@@ -45,6 +45,10 @@ class Upgrade {
                 },
             },
         });
+
+        if (levels[0].tooltip) {
+            this.button.setAttribute('title', levels[0].tooltip);
+        }
     }
 
     setLevel(level) {

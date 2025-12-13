@@ -337,9 +337,9 @@ class GeckoConfig {
 
 const GECKO_UPGRADES = [
     [
-        { cost: 1, speed: 130, accel: 150, decel: 480 },
+        { cost: 5, speed: 130, accel: 150, decel: 480 },
         { cost: 10, speed: 170, accel: 190, decel: 600 },
-        { cost: 100, speed: 250, accel: 280, decel: 720 },
+        { cost: 75, speed: 250, accel: 280, decel: 720 },
         { cost: 500, speed: 400, accel: 400, decel: 900 },
         { cost: 2000, speed: 550, accel: 800, decel: 1200 },
         { cost: 5000, speed: 720, accel: 1000, decel: 1800 },
@@ -357,9 +357,9 @@ const GECKO_UPGRADES = [
             },
         })),
     [
-        { cost: 1, value: 1.6 },
-        { cost: 10, value: 1.3 },
-        { cost: 100, value: 1.0 },
+        { cost: 2, value: 1.6 },
+        { cost: 20, value: 1.3 },
+        { cost: 150, value: 1.0 },
         { cost: 500, value: 0.75 },
         { cost: 2000, value: 0.4 },
         { cost: 5000, value: 0.3 },

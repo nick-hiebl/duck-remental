@@ -294,9 +294,9 @@ class FrogConfig {
 
 const FROG_UPGRADES = [
     [
-        { cost: 1, speed: 65, gravity: -110, cd: 0.25 },
-        { cost: 10, speed: 80, gravity: -130, cd: 0.20 },
-        { cost: 25, speed: 100, gravity: -140, cd: 0.15 },
+        { cost: 5, speed: 65, gravity: -110, cd: 0.25 },
+        { cost: 20, speed: 80, gravity: -130, cd: 0.20 },
+        { cost: 50, speed: 100, gravity: -140, cd: 0.15 },
         { cost: 100, speed: 135, gravity: -160, cd: 0.1 },
         { cost: 250, speed: 160, gravity: -190, cd: 0.085 },
         { cost: 1000, speed: 190, gravity: -200, cd: 0.08 },
@@ -313,13 +313,14 @@ const FROG_UPGRADES = [
             },
         })),
     [
-        { cost: 1, eatingCooldown: 1.6, tongueSpeed: 15 },
-        { cost: 10, eatingCooldown: 1.3, tongueSpeed: 21 },
+        { cost: 10, eatingCooldown: 1.6, tongueSpeed: 15 },
+        { cost: 25, eatingCooldown: 1.3, tongueSpeed: 21 },
         { cost: 50, eatingCooldown: 1.0, tongueSpeed: 27 },
         { cost: 250, eatingCooldown: 0.75, tongueSpeed: 33 },
-        { cost: 1000, eatingCooldown: 0.4, tongueSpeed: 40 },
+        { cost: 1500, eatingCooldown: 0.4, tongueSpeed: 40 },
         { cost: 5000, eatingCooldown: 0.3, tongueSpeed: 48 },
-        { cost: 25000, eatingCooldown: 0.22, tongueSpeed: 56 },
+        { cost: 20000, eatingCooldown: 0.22, tongueSpeed: 56 },
+        { cost: 40000, eatingCooldown: 0.19, tongueSpeed: 64 },
     ]
         .map(({ cost, eatingCooldown, tongueSpeed }) => ({
             id: 'frog-eat',
