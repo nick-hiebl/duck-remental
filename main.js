@@ -105,7 +105,9 @@ const Game = () => {
     });
 
     const save = () => {
-        STORAGE_INSTANCE.save(gameState);
+        if (!gameStateFromScene) {
+            STORAGE_INSTANCE.save(gameState);
+        }
     };
 
     const deleteSave = () => {
@@ -256,6 +258,8 @@ const GAME_UPGRADES = [
         { cost: 1000000, value: 0.5 },
         { cost: 2000000, value: 0.48 },
         { cost: 5000000, value: 0.45 },
+        { cost: 10000000, value: 0.42 },
+        { cost: 20000000, value: 0.4 },
     ]
         .map(({ cost, value }) => ({
             id: 'food-speed',
@@ -272,9 +276,13 @@ const GAME_UPGRADES = [
         { cost: 120, value: 5 },
         { cost: 200, value: 7 },
         { cost: 400, value: 10 },
-        { cost: 1000, value: 15 },
-        { cost: 2000, value: 20 },
-        { cost: 5000, value: 25 },
+        { cost: 800, value: 12 },
+        { cost: 1200, value: 14 },
+        { cost: 2000, value: 16 },
+        { cost: 5000, value: 18 },
+        { cost: 10000, value: 20 },
+        { cost: 20000, value: 25 },
+        { cost: 50000, value: 30 },
     ]
         .map(({ cost, value }) => ({
             id: 'food-group',
@@ -294,6 +302,8 @@ const GAME_UPGRADES = [
         { cost: 50000, value: 1.5 },
         { cost: 100000, value: 1.8 },
         { cost: 200000, value: 2 },
+        { cost: 500000, value: 2.25 },
+        { cost: 1000000, value: 2.5 },
     ]
         .map(({ cost, value }) => ({
             id: 'food-clusters',
@@ -312,6 +322,8 @@ const GAME_UPGRADES = [
         { cost: 25000, value: 400 },
         { cost: 50000, value: 500 },
         { cost: 100000, value: 650 },
+        { cost: 250000, value: 750 },
+        { cost: 500000, value: 1000 },
     ]
         .map(({ cost, value }) => ({
             id: 'food-max',
