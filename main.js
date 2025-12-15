@@ -74,6 +74,8 @@ const constructDefaultGameState = () => {
         items: [],
         // Graphical
         timePassed: 0,
+        earnedThisRound: 0,
+        collectedBy: {},
         // Visual/gamemode config
         width: 800,
         height: 600,
@@ -144,6 +146,89 @@ const Game = () => {
 
     let foodTimer = 0;
 
+    let showMonitors = false;
+    let selectedGroup = 'food-collected';
+    let resolution = 1;
+
+    const monitorGroups = [
+        {
+            id: 'food-collected',
+            name: 'Food collected',
+            getValue: gameState => gameState.earnedThisRound,
+            monitors: [
+                new Monitoring(1, 60),
+                new Monitoring(5, 60),
+            ],
+        },
+        {
+            id: 'duck-collect',
+            name: 'Food collected by ducks',
+            getValue: gameState => gameState.collectedBy['duck'],
+            monitors: [
+                new Monitoring(1, 60),
+                new Monitoring(5, 60),
+            ],
+        },
+        {
+            id: 'crab-collect',
+            name: 'Food collected by crabs',
+            getValue: gameState => gameState.collectedBy['crab'],
+            monitors: [
+                new Monitoring(1, 60),
+                new Monitoring(5, 60),
+            ],
+        },
+        {
+            id: 'frog-collect',
+            name: 'Food collected by frogs',
+            getValue: gameState => gameState.collectedBy['frog'],
+            monitors: [
+                new Monitoring(1, 60),
+                new Monitoring(5, 60),
+            ],
+        },
+        {
+            id: 'gecko-collect',
+            name: 'Food collected by geckos',
+            getValue: gameState => gameState.collectedBy['gecko'],
+            monitors: [
+                new Monitoring(1, 60),
+                new Monitoring(5, 60),
+            ],
+        },
+        {
+            id: 'food-available',
+            name: 'Food available',
+            getValue: gameState => gameState.items.length,
+            monitors: [
+                new Monitoring(1, 60, 'max'),
+                new Monitoring(5, 60, 'max'),
+            ],
+        },
+    ];
+
+    window.monitorGroups = monitorGroups;
+
+    document.getElementById('show-chart').addEventListener('change', e => {
+        showMonitors = e.currentTarget.checked;
+    });
+
+    const groupSelector = document.getElementById('monitor-group-selector');
+    monitorGroups.forEach(group => {
+        const option = createElement('option', { text: group.name });
+        option.value = group.id;
+        groupSelector.appendChild(option);
+    });
+
+    groupSelector.addEventListener('change', e => {
+        selectedGroup = e.currentTarget.value;
+    });
+
+    const resSelector = document.getElementById('resolution-selector');
+    resSelector.addEventListener('change', e => {
+        resolution = parseInt(e.currentTarget.value, 10);
+    });
+
     const draw = (ctx) => {
         ctx.fillStyle = '#47e';
         ctx.fillRect(0, 0, gameState.width, gameState.height);
@@ -154,19 +239,35 @@ const Game = () => {
         gameState.creatures.forEach(creature => creature.draw(ctx));
 
         document.getElementById('crumbs').textContent = gameState.unspentPoints;
+
+        if (showMonitors) {
+            const group = monitorGroups.find(group => group.id === selectedGroup);
+            if (group) {
+                const monitor = group.monitors.find(monitor => monitor.resolution === resolution);
+
+                if (monitor) {
+                    monitor.draw(ctx, gameState.width, gameState.height, gameState.timePassed);
+                }
+            }
+        }
     };
 
     const update = deltaTime => {
         gameState.timePassed += deltaTime;
+
         gameState.creatures.sort((a, b) => {
             return a.config.size - b.config.size;
         });
 
+        gameState.earnedThisRound = 0;
+        gameState.collectedBy = { duck: 0, crab: 0, gecko: 0, frog: 0 };
         gameState.creatures.forEach(creature => {
             creature.update(deltaTime, gameState.items);
-            gameState.unspentPoints += creature.score;
+            gameState.earnedThisRound += creature.score;
+            gameState.collectedBy[creature.constructor.name.toLowerCase()] += creature.score;
             creature.score = 0;
         });
+        gameState.unspentPoints += gameState.earnedThisRound;
 
         gameState.items = gameState.items.filter(item => !item.eaten);
         gameState.items.forEach(item => item.update(deltaTime));
@@ -177,6 +278,14 @@ const Game = () => {
             placeFood();
             foodTimer = 0;
         }
+
+        monitorGroups.forEach(group => {
+            const value = group.getValue(gameState);
+
+            group.monitors.forEach(monitor => {
+                monitor.insert(value, gameState.timePassed);
+            });
+        });
     };
 
     return {

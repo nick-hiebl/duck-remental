@@ -17,6 +17,13 @@
                 </div>
                 <div id="controls"></div>
                 <div id="core-controls">
+                    <strong>Charts</strong>
+                    <label><input type="checkbox" id="show-chart">Show chart</label>
+                    <select id="monitor-group-selector"></select>
+                    <select id="resolution-selector">
+                        <option value="1">per 1s, last 60s</option>
+                        <option value="5">per 5s, last 5m</option>
+                    </select>
                     <strong>Core settings</strong>
                     <div>
                         <button id="save">Save</button>
@@ -31,6 +38,7 @@
         </div>
         
         <script src="./storage.js"></script>
+        <script src="./monitoring.js"></script>
         <script src="./dom.js"></script>
         <script src="./canvas.js"></script>
         <script src="./list-utils.js"></script>
