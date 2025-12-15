@@ -162,7 +162,7 @@ const Game = () => {
         },
         {
             id: 'duck-collect',
-            name: 'Food collected by ducks',
+            name: 'Food collected, by ducks',
             getValue: gameState => gameState.collectedBy['duck'],
             monitors: [
                 new Monitoring(1, 60),
@@ -171,7 +171,7 @@ const Game = () => {
         },
         {
             id: 'crab-collect',
-            name: 'Food collected by crabs',
+            name: 'Food collected, by crabs',
             getValue: gameState => gameState.collectedBy['crab'],
             monitors: [
                 new Monitoring(1, 60),
@@ -180,7 +180,7 @@ const Game = () => {
         },
         {
             id: 'frog-collect',
-            name: 'Food collected by frogs',
+            name: 'Food collected, by frogs',
             getValue: gameState => gameState.collectedBy['frog'],
             monitors: [
                 new Monitoring(1, 60),
@@ -189,7 +189,7 @@ const Game = () => {
         },
         {
             id: 'gecko-collect',
-            name: 'Food collected by geckos',
+            name: 'Food collected, by geckos',
             getValue: gameState => gameState.collectedBy['gecko'],
             monitors: [
                 new Monitoring(1, 60),
