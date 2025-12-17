@@ -256,43 +256,21 @@ class Crab {
     }
 
     strategy(items) {
-        items = items.filter(item => !item.eaten);
+        const [left, right] = Array.from(Object.values(this.getIdealHandPositions()))
+            .map(v => v_add(v, this));
 
-        if (items.length === 0) {
+        const closestItem = selectTarget(
+            items,
+            this.target,
+            this,
+            this.config.gameState.strategyConfig,
+            item => Math.min(dist(item, left), dist(item, right)) < this.config.eatDist,
+        );
+
+        if (!closestItem) {
             this.target = null;
             return { id: 'STOP', rate: IDLE_DECEL };
         }
-
-        let closestItem;
-
-        if (this.target && this.target.eaten && this.timeSinceEating > MAX_FRAME_DUR / 1000) {
-            // Someone else ate my food, rage-quit
-            closestItem = chooseRandom(items);
-        } else if (items.includes(this.target)) {
-            closestItem = this.target;
-        } else if (items.length === 1) {
-            closestItem = items[0];
-        } else {
-            const weights = items.map(item => {
-                return {
-                    weight: 1 / (Math.pow(dist(this, item), 3) + 1),
-                    item,
-                };
-            });
-
-            const BEST_TO_CHOOSE = 3;
-
-            const result = chooseRandom(bestNItems(weights, BEST_TO_CHOOSE));
-
-            if (result) {
-                closestItem = result.item;
-            } else {
-                throw Error('Failed to select item');
-            }
-        }
-
-        const [left, right] = Array.from(Object.values(this.getIdealHandPositions()))
-            .map(v => v_add(v, this));
 
         if (dist(left, closestItem) < this.config.eatDist) {
             return { id: 'EAT', rate: STOP_DECEL, target: closestItem, arm: 'left' };
@@ -318,8 +296,10 @@ class Crab {
         };
 
         if (strategy.id === 'EAT') {
+            strategy.target.claimed = true;
             if (this.timeSinceEating >= this.config.eatingCooldown) {
                 this.score += strategy.target.eat();
+                this.target = null;
                 if (strategy.arm === 'left') {
                     this.timeSinceEatingLeft = 0;
                 } else {
@@ -335,6 +315,7 @@ class Crab {
         } else if (strategy.id === 'APPROACH') {
             this.target = strategy.target;
             const target = strategy.target;
+            target.claimed = true;
 
             const offset = v_sub(target, this);
             const distance = v_mag(offset);

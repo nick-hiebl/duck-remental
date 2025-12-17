@@ -88,50 +88,22 @@ class Frog {
     }
 
     strategy(items) {
-        items = items.filter(item => !item.eaten);
-        if (items.length === 0) {
+        const closestItem = selectTarget(
+            items,
+            this.target,
+            this,
+            this.config.gameState.strategyConfig,
+            item => {
+                const d = dist(item, this);
+
+                return this.minTongueDist <= d && d <= this.config.tongueDist;
+            },
+        );
+
+        if (!closestItem) {
             this.target = null;
             return { id: 'STOP' };
         }
-
-        let closestItem;
-
-        if (this.target && this.target.eaten && this.timeSinceEating > MAX_FRAME_DUR / 1000) {
-            // Someone else ate my food, rage-quit
-            closestItem = chooseRandom(items);
-        } else if (items.includes(this.target)) {
-            closestItem = this.target;
-        } else if (items.length === 1) {
-            closestItem = items[0];
-        } else {
-            const inRangeItems = items.filter(item => {
-                const distance = dist(this, item);
-
-                return this.config.minTongueDist < distance && distance < this.config.tongueDist;
-            });
-
-            if (inRangeItems.length > 0) {
-                closestItem = chooseRandom(inRangeItems);
-            } else {
-                const weights = items.map(item => {
-                    return {
-                        weight: 1 / (dist(this, item) + 1),
-                        item,
-                    };
-                });
-
-                const BEST_TO_CHOOSE = 3;
-
-                const result = chooseRandom(bestNItems(weights, BEST_TO_CHOOSE));
-
-                if (result) {
-                    closestItem = result.item;
-                } else {
-                    throw Error('Failed to select item');
-                }
-            }
-        }
-
         const distToTarget = dist(this, closestItem);
 
         if (distToTarget <= this.config.tongueDist && distToTarget >= this.config.minTongueDist) {
@@ -192,6 +164,7 @@ class Frog {
         if (strategy.id === 'EAT') {
             this.target = strategy.target;
             const target = strategy.target;
+            target.claimed = true;
 
             if (this.timeSinceEating >= this.config.eatingCooldown) {
                 if (this.tongueGoingOut) {
@@ -220,6 +193,7 @@ class Frog {
         } else if (strategy.id === 'STOP') {
             // Wait ig
         } else if (strategy.id === 'APPROACH') {
+            strategy.target.claimed = true;
             if (this.timeSinceLanding < this.config.landingCooldown) {
                 // Froggy needs a rest before jumping again
                 return;

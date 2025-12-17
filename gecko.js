@@ -137,41 +137,18 @@ class Gecko {
     }
 
     strategy(items) {
-        items = items.filter(item => !item.eaten);
-        if (items.length === 0) {
+        const closestItem = selectTarget(
+            items,
+            this.target,
+            this,
+            this.config.gameState.strategyConfig,
+            item => dist(item, this) < this.config.eatDist,
+        );
+
+        if (!closestItem) {
             this.target = null;
             return { id: 'STOP', rate: IDLE_DECEL };
-        }
-
-        let closestItem;
-
-        if (this.target && this.target.eaten && this.timeSinceEating > MAX_FRAME_DUR / 1000) {
-            // Someone else ate my food, rage-quit
-            closestItem = chooseRandom(items);
-        } else if (items.includes(this.target)) {
-            closestItem = this.target;
-        } else if (items.length === 1) {
-            closestItem = items[0];
-        } else {
-            const weights = items.map(item => {
-                return {
-                    weight: 1 / (Math.pow(dist(this, item), 3) + 1),
-                    item,
-                };
-            });
-
-            const BEST_TO_CHOOSE = 3;
-
-            const result = chooseRandom(bestNItems(weights, BEST_TO_CHOOSE));
-
-            if (result) {
-                closestItem = result.item;
-            } else {
-                throw Error('Failed to select item');
-            }
-        }
-
-        if (dist(this, closestItem) < this.config.eatDist) {
+        } else if (dist(this, closestItem) < this.config.eatDist) {
             return { id: 'EAT', rate: STOP_DECEL, target: closestItem };
         }
 
@@ -183,9 +160,11 @@ class Gecko {
         const strategy = this.strategy(items);
 
         if (strategy.id === 'EAT') {
+            strategy.target.claimed = true;
             if (this.timeSinceEating >= this.config.eatingCooldown) {
                 this.score += strategy.target.eat();
                 this.timeSinceEating = 0;
+                this.target = null;
             } else {
                 this.target = strategy.target;
                 this.vel = v_set_magnitude(
@@ -201,6 +180,7 @@ class Gecko {
         } else if (strategy.id === 'APPROACH') {
             this.target = strategy.target;
             const target = strategy.target;
+            target.claimed = true;
 
             const offset = v_sub(target, this);
             const offsetAngle = v_angle(offset);

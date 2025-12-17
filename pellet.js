@@ -6,6 +6,7 @@ class Pellet {
         this.y = y;
 
         this.eaten = false;
+        this.claimed = false;
 
         this.foodValue = gameState.newFoodValue ?? 1;
         this.gameState = gameState;

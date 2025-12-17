@@ -70,6 +70,7 @@ const constructDefaultGameState = () => {
         foodClusterSize: 1,
         multiClusterBase: 0,
         maxFood: 50,
+        strategyConfig: { ...DEFAULT_STRATEGY_CONFIG },
         // State
         items: [],
         // Graphical
