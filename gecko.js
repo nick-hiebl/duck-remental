@@ -322,6 +322,7 @@ const GECKO_UPGRADES = [
         { cost: 500, speed: 400, accel: 400, decel: 900 },
         { cost: 2000, speed: 550, accel: 800, decel: 1200 },
         { cost: 5000, speed: 720, accel: 1000, decel: 1800 },
+        { cost: 75000, speed: 800, accel: 1100, decel: 2000 },
     ]
         .map(({ cost, speed, accel, decel }) => ({
             id: 'gecko-speed',
@@ -343,6 +344,8 @@ const GECKO_UPGRADES = [
         { cost: 2000, value: 0.4 },
         { cost: 5000, value: 0.3 },
         { cost: 20000, value: 0.22 },
+        { cost: 150000, value: 0.19 },
+        { cost: 750000, value: 0.17 },
     ]
         .map(({ cost, value }) => ({
             id: 'gecko-eat',

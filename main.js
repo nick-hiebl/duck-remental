@@ -239,7 +239,7 @@ const Game = () => {
 
         gameState.creatures.forEach(creature => creature.draw(ctx));
 
-        document.getElementById('crumbs').textContent = gameState.unspentPoints;
+        document.getElementById('crumbs').textContent = gameState.unspentPoints.toLocaleString();
 
         if (showMonitors) {
             const group = monitorGroups.find(group => group.id === selectedGroup);
@@ -437,7 +437,9 @@ const GAME_UPGRADES = [
         { cost: 50000, value: 500 },
         { cost: 100000, value: 650 },
         { cost: 250000, value: 750 },
-        { cost: 500000, value: 1000 },
+        { cost: 500_000, value: 1000 },
+        { cost: 2_500_000, value: 1300 },
+        { cost: 10_000_000, value: 1800 },
     ]
         .map(({ cost, value }) => ({
             id: 'food-max',
@@ -452,10 +454,19 @@ const GAME_UPGRADES = [
         { cost: 100 },
         { cost: 1000 },
         { cost: 10000 },
-        { cost: 100000 },
-        { cost: 1000000 },
-        { cost: 10000000 },
-        { cost: 100000000 },
+        { cost: 100_000 },
+        { cost: 200_000 },
+        { cost: 400_000 },
+        { cost: 700_000 },
+        { cost: 1_000_000 },
+        { cost: 2_000_000 },
+        { cost: 4_000_000 },
+        { cost: 7_000_000 },
+        { cost: 10_000_000 },
+        { cost: 20_000_000 },
+        { cost: 40_000_000 },
+        { cost: 70_000_000 },
+        { cost: 100_000_000 },
     ]
         .map(({ cost }) => ({
             id: 'count-duck',
@@ -470,10 +481,19 @@ const GAME_UPGRADES = [
         { cost: 300 },
         { cost: 3000 },
         { cost: 30000 },
-        { cost: 300000 },
-        { cost: 3000000 },
-        { cost: 30000000 },
-        { cost: 300000000 },
+        { cost: 100_000 },
+        { cost: 300_000 },
+        { cost: 500_000 },
+        { cost: 600_000 },
+        { cost: 1_000_000 },
+        { cost: 3_000_000 },
+        { cost: 5_000_000 },
+        { cost: 6_000_000 },
+        { cost: 10_000_000 },
+        { cost: 30_000_000 },
+        { cost: 50_000_000 },
+        { cost: 60_000_000 },
+        { cost: 100_000_000 },
     ]
         .map(({ cost }) => ({
             id: 'count-crab',
@@ -488,10 +508,19 @@ const GAME_UPGRADES = [
         { cost: 700 },
         { cost: 7000 },
         { cost: 70000 },
-        { cost: 700000 },
-        { cost: 7000000 },
-        { cost: 70000000 },
-        { cost: 700000000 },
+        { cost: 100_000 },
+        { cost: 180_000 },
+        { cost: 360_000 },
+        { cost: 700_000 },
+        { cost: 1_000_000 },
+        { cost: 1_800_000 },
+        { cost: 3_600_000 },
+        { cost: 7_000_000 },
+        { cost: 10_000_000 },
+        { cost: 18_000_000 },
+        { cost: 36_000_000 },
+        { cost: 70_000_000 },
+        { cost: 100_000_000 },
     ]
         .map(({ cost }) => ({
             id: 'count-frog',
@@ -505,11 +534,20 @@ const GAME_UPGRADES = [
         { cost: 50 },
         { cost: 500 },
         { cost: 5000 },
-        { cost: 50000 },
-        { cost: 500000 },
-        { cost: 5000000 },
-        { cost: 50000000 },
-        { cost: 500000000 },
+        { cost: 50_000 },
+        { cost: 100_000 },
+        { cost: 300_000 },
+        { cost: 500_000 },
+        { cost: 800_000 },
+        { cost: 1_000_000 },
+        { cost: 3_000_000 },
+        { cost: 5_000_000 },
+        { cost: 8_000_000 },
+        { cost: 10_000_000 },
+        { cost: 30_000_000 },
+        { cost: 50_000_000 },
+        { cost: 80_000_000 },
+        { cost: 100_000_000 },
     ]
         .map(({ cost }) => ({
             id: 'count-gecko',

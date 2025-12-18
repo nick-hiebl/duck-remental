@@ -292,6 +292,7 @@ const DUCK_UPGRADES = [
         { cost: 500, speed: 400, accel: 400, decel: 900, turning: 6.5 },
         { cost: 2000, speed: 550, accel: 800, decel: 1200, turning: 9 },
         { cost: 5000, speed: 720, accel: 1000, decel: 1800, turning: 11 },
+        { cost: 100_000, speed: 800, accel: 1100, decel: 2000, turning: 13 },
     ]
         .map(({ cost, speed, accel, decel, turning }) => ({
             id: 'duck-speed',
@@ -311,7 +312,9 @@ const DUCK_UPGRADES = [
         { cost: 500, value: 0.75 },
         { cost: 2000, value: 0.4 },
         { cost: 5000, value: 0.3 },
-        { cost: 20000, value: 0.22 },
+        { cost: 20_000, value: 0.23 },
+        { cost: 250_000, value: 0.20 },
+        { cost: 1_000_000, value: 0.18 },
     ]
         .map(({ cost, value }) => ({
             id: 'duck-eat',

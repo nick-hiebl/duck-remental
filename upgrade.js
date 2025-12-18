@@ -18,7 +18,7 @@ class Upgrade {
             ],
         });
 
-        this.priceSpan = createElement('span', { text: levels[0].cost });
+        this.priceSpan = createElement('span', { text: levels[0].cost.toLocaleString() });
 
         const div2 = createElement('div', {
             children: [
@@ -61,11 +61,11 @@ class Upgrade {
         if (this.levels[this.progress]) {
             this.nameSpan.textContent = this.levels[this.progress].text;
             this.levelSpan.textContent = `level ${this.progress}`;
-            this.priceSpan.textContent = this.levels[this.progress].cost;
+            this.priceSpan.textContent = this.levels[this.progress].cost.toLocaleString();
             this.levels[this.progress - 1].upgrade(this.config);
         } else if (this.levels[this.progress - 1]) {
             this.nameSpan.textContent = this.levels[this.progress - 1].text;
-            this.priceSpan.textContent = this.levels[this.progress - 1].cost;
+            this.priceSpan.textContent = this.levels[this.progress - 1].cost.toLocaleString();
             this.levelSpan.textContent = `MAX`;
             this.levels[this.progress - 1].upgrade(this.config);
         } else {

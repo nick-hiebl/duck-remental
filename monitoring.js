@@ -63,7 +63,7 @@ class Monitoring {
 
         ctx.fillStyle = 'white';
         ctx.font = '12px sans-serif';
-        ctx.fillText(maxValue.toString(), 0, -HEIGHT + 12);
+        ctx.fillText(maxValue.toLocaleString(), 0, -HEIGHT + 12);
 
         ctx.restore();
     }

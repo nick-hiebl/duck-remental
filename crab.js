@@ -494,7 +494,9 @@ const CRAB_UPGRADES = [
         { cost: 500, value: 0.75 },
         { cost: 2000, value: 0.4 },
         { cost: 5000, value: 0.3 },
-        { cost: 20000, value: 0.22 },
+        { cost: 20_000, value: 0.22 },
+        { cost: 100_000, value: 0.17 },
+        { cost: 500_000, value: 0.14 },
     ]
         .map(({ cost, value }) => ({
             id: 'crab-eat',

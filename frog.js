@@ -274,6 +274,7 @@ const FROG_UPGRADES = [
         { cost: 250, speed: 160, gravity: -190, cd: 0.085 },
         { cost: 1000, speed: 190, gravity: -200, cd: 0.08 },
         { cost: 2500, speed: 210, gravity: -210, cd: 0.07 },
+        { cost: 50_000, speed: 240, gravity: -220, cd: 0.05 },
     ]
         .map(({ cost, speed, gravity, cd }) => ({
             id: 'frog-speed',
@@ -294,6 +295,9 @@ const FROG_UPGRADES = [
         { cost: 5000, eatingCooldown: 0.3, tongueSpeed: 48 },
         { cost: 20000, eatingCooldown: 0.22, tongueSpeed: 56 },
         { cost: 40000, eatingCooldown: 0.19, tongueSpeed: 64 },
+        { cost: 100_000, eatingCooldown: 0.17, tongueSpeed: 72 },
+        { cost: 500_000, eatingCooldown: 0.155, tongueSpeed: 80 },
+        { cost: 1_500_000, eatingCooldown: 0.14, tongueSpeed: 90 },
     ]
         .map(({ cost, eatingCooldown, tongueSpeed }) => ({
             id: 'frog-eat',
