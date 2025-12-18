@@ -131,12 +131,11 @@ class Duck {
         return this.timeSinceEating >= this.config.eatingCooldown;
     }
 
-    strategy(items) {
+    strategy(_items) {
         const closestItem = selectTarget(
-            items,
+            this.config.gameState,
             this.target,
             this,
-            this.config.gameState.strategyConfig,
             item => dist(this, item) < this.config.eatDist,
         );
 

@@ -138,10 +138,9 @@ class Gecko {
 
     strategy(items) {
         const closestItem = selectTarget(
-            items,
+            this.config.gameState,
             this.target,
             this,
-            this.config.gameState.strategyConfig,
             item => dist(item, this) < this.config.eatDist,
         );
 

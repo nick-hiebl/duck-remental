@@ -87,12 +87,11 @@ class Frog {
         this.config.draw();
     }
 
-    strategy(items) {
+    strategy(_items) {
         const closestItem = selectTarget(
-            items,
+            this.config.gameState,
             this.target,
             this,
-            this.config.gameState.strategyConfig,
             item => {
                 const d = dist(item, this);
 

@@ -255,15 +255,14 @@ class Crab {
         return { left, right };
     }
 
-    strategy(items) {
+    strategy(_items) {
         const [left, right] = Array.from(Object.values(this.getIdealHandPositions()))
             .map(v => v_add(v, this));
 
         const closestItem = selectTarget(
-            items,
+            this.config.gameState,
             this.target,
             this,
-            this.config.gameState.strategyConfig,
             item => Math.min(dist(item, left), dist(item, right)) < this.config.eatDist,
         );
 

@@ -48,6 +48,7 @@ class Monitoring {
         const data = this.read(timestamp);
 
         ctx.strokeStyle = 'red';
+        ctx.lineJoin = 'round';
         let lastValue = HEIGHT * data[0] / maxValue;
         ctx.beginPath();
         ctx.moveTo(0, -lastValue);
