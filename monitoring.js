@@ -65,6 +65,14 @@ class Monitoring {
         ctx.font = '12px sans-serif';
         ctx.fillText(maxValue.toLocaleString(), 0, -HEIGHT + 12);
 
+        const total = this.mode !== 'sum'
+            ? undefined
+            : this.data.reduce((a, b) => a + b, 0);
+
+        if (total) {
+            ctx.fillText(`Total: ${total.toLocaleString()}`, 0, -5);
+        }
+
         ctx.restore();
     }
 }

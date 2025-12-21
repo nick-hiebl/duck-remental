@@ -157,6 +157,7 @@ const Game = () => {
             name: 'Food collected',
             getValue: gameState => gameState.earnedThisRound,
             monitors: [
+                new Monitoring(0.5, 15),
                 new Monitoring(1, 60),
                 new Monitoring(5, 60),
             ],
@@ -166,6 +167,7 @@ const Game = () => {
             name: 'Food collected, by ducks',
             getValue: gameState => gameState.collectedBy['duck'],
             monitors: [
+                new Monitoring(0.5, 15),
                 new Monitoring(1, 60),
                 new Monitoring(5, 60),
             ],
@@ -175,6 +177,7 @@ const Game = () => {
             name: 'Food collected, by crabs',
             getValue: gameState => gameState.collectedBy['crab'],
             monitors: [
+                new Monitoring(0.5, 15),
                 new Monitoring(1, 60),
                 new Monitoring(5, 60),
             ],
@@ -184,6 +187,7 @@ const Game = () => {
             name: 'Food collected, by frogs',
             getValue: gameState => gameState.collectedBy['frog'],
             monitors: [
+                new Monitoring(0.5, 15),
                 new Monitoring(1, 60),
                 new Monitoring(5, 60),
             ],
@@ -193,6 +197,7 @@ const Game = () => {
             name: 'Food collected, by geckos',
             getValue: gameState => gameState.collectedBy['gecko'],
             monitors: [
+                new Monitoring(0.5, 15),
                 new Monitoring(1, 60),
                 new Monitoring(5, 60),
             ],
@@ -202,6 +207,7 @@ const Game = () => {
             name: 'Food available',
             getValue: gameState => gameState.items.length,
             monitors: [
+                new Monitoring(0.5, 15),
                 new Monitoring(1, 60, 'max'),
                 new Monitoring(5, 60, 'max'),
             ],
