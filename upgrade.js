@@ -63,11 +63,17 @@ class Upgrade {
             this.levelSpan.textContent = `level ${this.progress}`;
             this.priceSpan.textContent = this.levels[this.progress].cost.toLocaleString();
             this.levels[this.progress - 1].upgrade(this.config);
+            if (this.levels[this.progress].tooltip) {
+                this.button.setAttribute('title', this.levels[this.progress].tooltip);
+            }
         } else if (this.levels[this.progress - 1]) {
             this.nameSpan.textContent = this.levels[this.progress - 1].text;
             this.priceSpan.textContent = this.levels[this.progress - 1].cost.toLocaleString();
             this.levelSpan.textContent = `MAX`;
             this.levels[this.progress - 1].upgrade(this.config);
+            if (this.levels[this.progress - 1].tooltip) {
+                this.button.setAttribute('title', this.levels[this.progress - 1].tooltip);
+            }
         } else {
             this.levelSpan.textContent = `MAX`;
             this.levels[this.levels.length - 1].upgrade(this.config);

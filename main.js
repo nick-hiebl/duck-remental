@@ -557,4 +557,40 @@ const GAME_UPGRADES = [
                 config.gameState.creatures.push(new Gecko(400, 300, config.gameState));
             },
         })),
+    [
+        {
+            cost: 100,
+            conf: { bestToChooseFrom: 3, allowIdealChoice: false, segmentationSelect: false, claimingEnabled: false },
+            tooltip: 'Choose amongst the closest 3 items instead of 5',
+        },
+        {
+            cost: 2_000,
+            conf: { bestToChooseFrom: 1, allowIdealChoice: false, segmentationSelect: false, claimingEnabled: false },
+            tooltip: 'Always choose the closest item',
+        },
+        {
+            cost: 50_000,
+            conf: { bestToChooseFrom: 1, allowIdealChoice: true, segmentationSelect: false, claimingEnabled: false },
+            tooltip: 'If there\'s a very convenient item, frogs or geckos will choose it',
+        },
+        {
+            cost: 250_000,
+            conf: { bestToChooseFrom: 1, allowIdealChoice: true, segmentationSelect: true, claimingEnabled: false },
+            tooltip: 'If fighting over food, creatures will try not to wander so far to a new spot',
+        },
+        {
+            cost: 1_000_000,
+            conf: { bestToChooseFrom: 1, allowIdealChoice: true, segmentationSelect: true, claimingEnabled: true },
+            tooltip: 'Creatures will no longer fight over food',
+        },
+    ]
+        .map(({ cost, conf, tooltip }) => ({
+            id: 'better-ai',
+            text: 'Smarter creatures',
+            cost,
+            tooltip,
+            upgrade: config => {
+                Object.assign(config.gameState.strategyConfig, conf);
+            },
+        })),
 ];
